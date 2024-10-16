@@ -1,0 +1,144 @@
+<ion-content class="ion-padding">
+  <div class="cart-container">
+    <table class="cart-table" *ngIf="cartItems.length > 0; else emptyCart">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of cartItems">
+          <td class="product-info">
+            <ion-img [src]="item.image_url"></ion-img>
+            <div>
+              <h3>{{ item.name }}</h3>
+              <p *ngIf="item.hasPromotion" class="promotion-tag">{{ item.promotionName }}</p>
+              <ion-button fill="clear" (click)="removeItem(item.product_id)">Remove</ion-button>
+            </div>
+          </td>
+          <td>
+            <div class="quantity-control">
+              <ion-button fill="clear" (click)="updateQuantity(item.product_id, item.quantity - 1)">-</ion-button>
+              <span>{{ item.quantity }}</span>
+              <ion-button fill="clear" (click)="updateQuantity(item.product_id, item.quantity + 1)">+</ion-button>
+              <ion-button fill="clear" (click)="enterCustomQuantity(item.product_id)">
+                <ion-icon name="create-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </td>
+          <td>
+            <ng-container *ngIf="item.hasPromotion">
+              <span class="original-price">R{{ item.price }}</span>
+              <span class="discounted-price">R{{ item.discountedPrice }}</span>
+            </ng-container>
+            <ng-container *ngIf="!item.hasPromotion">
+              R{{ item.price }}
+            </ng-container>
+          </td>
+          <td>
+            <ng-container *ngIf="item.hasPromotion">
+              <span class="original-price">R{{ (item.price * item.quantity) }}</span>
+              <span class="discounted-price">R{{ (item.discountedPrice * item.quantity) }}</span>
+            </ng-container>
+            <ng-container *ngIf="!item.hasPromotion">
+              R{{ (item.price * item.quantity) }}
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #emptyCart>
+      <div class="empty-cart-message">
+        <h3>Your cart is empty</h3>
+        <p>Add some items to your cart to see them here.</p>
+      </div>
+    </ng-template>
+    <div class="cart-total">
+      <table>
+        <tr>
+          <td>Original Subtotal</td>
+          <td>R{{ subtotal }}</td>
+        </tr>
+        <tr>
+          <td>Discounted Subtotal</td>
+          <td>R{{ discountedSubtotal }}</td>
+        </tr>
+        <tr>
+          <td>Tax</td>
+          <td>R{{ tax }}</td>
+        </tr>
+        <tr>
+          <td><strong>Original Total</strong></td>
+          <td><strong>R{{ total }}</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Discounted Total</strong></td>
+          <td><strong>R{{ discountedTotal }}</strong></td>
+        </tr>
+      </table>
+    </div>
+
+
+    <ion-item-divider>
+      <ion-label>Delivery Method</ion-label>
+    </ion-item-divider>
+    <ion-radio-group [(ngModel)]="deliveryMethod">
+      <ion-item>
+        <ion-label>Delivery</ion-label>
+        <ion-radio value="delivery"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label>Walk-in Collection</ion-label>
+        <ion-radio value="walk-in"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <div *ngIf="deliveryMethod === 'delivery'">
+      <ion-item-divider>
+        <ion-label>Shipping Information</ion-label>
+      </ion-item-divider>
+      
+      <ion-card *ngFor="let address of savedAddresses">
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="10">
+              <p>{{ address.address_line1 }}</p>
+              <p *ngIf="address.address_line2">{{ address.address_line2 }}</p>
+              <p>{{ address.city }}, {{ address.province }}</p>
+              <p>{{ address.postal_code }}</p>
+              <p>{{ address.country }}</p>
+            </ion-col>
+            <ion-col size="2">
+              <ion-button fill="clear" (click)="deleteAddress(address.id)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    
+      <ion-button expand="block" (click)="addNewAddress()">Add New Address</ion-button>
+    </div>
+
+    <ion-item-divider>
+      <ion-label>Order Summary</ion-label>
+    </ion-item-divider>
+    <ion-item>
+      <ion-label>Subtotal</ion-label>
+      <ion-note slot="end">R{{ subtotal }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Tax</ion-label>
+      <ion-note slot="end">R{{ tax }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Total</ion-label>
+      <ion-note slot="end"><strong>R{{ total}}</strong></ion-note>
+    </ion-item>
+
+    <ion-button expand="block" (click)="PlaceOrder()">Place Order</ion-button>
+  </div>
+</ion-content>

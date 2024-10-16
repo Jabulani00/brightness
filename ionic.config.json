@@ -1,0 +1,7 @@
+{
+  "name": "Best_Bright",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

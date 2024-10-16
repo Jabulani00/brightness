@@ -1,0 +1,224 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Global colors */
+:root {
+    --background: rgb(112, 203, 233);
+    --primary-color: #004e92; /* Deep blue */
+    --secondary-color: #00b4d8; /* Bright complementary color */
+    --text-color: #333; /* Dark text */
+  }
+  
+  ion-content {
+    --background: #f4f5f8;
+  }
+  
+  ion-header {
+    ion-toolbar {
+      --background: #4a90e2;
+      
+      ion-title {
+        display: flex;
+        align-items: center;
+        
+        ion-icon {
+          margin-right: 8px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  
+  .promo-card {
+    margin-bottom: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+    img {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+  
+    ion-card-header {
+      background-color: #ffffff;
+      
+      ion-card-subtitle {
+        font-weight: bold;
+        color: #4a90e2;
+      }
+      
+      ion-card-title {
+        font-size: 1.2rem;
+        color: #333333;
+      }
+    }
+  
+    ion-card-content {
+      background-color: #ffffff;
+      padding: 16px;
+      
+      p {
+        margin-bottom: 16px;
+        color: #666666;
+      }
+    }
+  }
+  
+  ion-chip {
+    margin-bottom: 8px;
+  }
+
+/* Styling the order table */
+ion-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+ion-row {
+  border-bottom: 1px solid #ccc; /* Adds borders between rows */
+}
+
+ion-col {
+  padding: 10px;
+  border: 1px solid #ddd; /* Adds borders around each cell */
+  text-align: center;
+}
+
+/* Style only the first row (header) */
+ion-row:first-child ion-col {
+  font-weight: bold;
+  background-color: #00b4d8; /* Blue background for headers */
+  color: white;
+}
+
+/* Buttons styling */
+
+
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%; /* Make the button circular */
+  z-index: 1000; /* Ensure the button hovers over other elements */
+  background-color: #4a90e2; /* Set background color */
+  color: white; /* Button text color */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease; /* Add hover effect */
+}
+
+.fab:hover {
+  transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+.full-button {
+  width: 90%; /* Adjust percentage to leave some space on the right */
+  max-width: 600px; /* Optional: set a maximum width if needed */
+  margin: 0 auto; /* Center the button horizontally */
+  display: block;
+  padding: 15px; /* Adjust padding as needed */
+  background-color: #4a90e2; /* Customize background color */
+  color: white; /* Text color */
+  border: none;
+  border-radius: 8px; /* Slightly rounded corners */
+  text-align: center;
+  font-size: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a shadow */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+
+.small-button {
+  width: 90%; /* Adjust percentage to leave some space on the right */
+  max-width: 600px; /* Optional: set a maximum width if needed */ /* Center the button horizontally */
+  display: block;
+  padding: 15px; /* Adjust padding as needed */
+  background-color: #4a90e2; /* Customize background color */
+  color: white; /* Text color */
+  border: none;
+  border-radius: 8px; /* Slightly rounded corners */
+  text-align: center;
+  font-size: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a shadow */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+

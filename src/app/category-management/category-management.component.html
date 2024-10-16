@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Manage Categories</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item *ngFor="let category of categories">
+      {{ category.name }}
+      <ion-buttons slot="end">
+        <ion-button (click)="editCategory(category)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteCategory(category.category_id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+  <form [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+    <ion-item>
+      <ion-input formControlName="newCategory" placeholder="New category name"></ion-input>
+      <ion-button type="submit" [disabled]="!categoryForm.valid">Add</ion-button>
+    </ion-item>
+  </form>
+</ion-content>

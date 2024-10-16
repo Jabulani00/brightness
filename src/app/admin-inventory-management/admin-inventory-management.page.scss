@@ -1,0 +1,28 @@
+  .custom-card {
+    margin: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .custom-card ion-card-header {
+    background-color: #f4f5f8;
+  }
+  .alert {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  .stock-status {
+    font-weight: bold;
+  }
+  .stock-low {
+    color: #dc3545;
+  }
+  .stock-medium {
+    color: #ffc107;
+  }
+  .stock-high {
+    color: #28a745;
+  }

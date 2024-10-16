@@ -1,0 +1,27 @@
+<ion-app>
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-content>
+      <ion-list id="inbox-list">
+        <ion-list-header>BestBright</ion-list-header>
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+          <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+            <ion-label>{{ p.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+
+  <ion-header *ngIf="showAdminButtons">
+    <ion-toolbar>
+      <ion-buttons slot="end" class="desktop-only">
+        <ion-button *ngFor="let p of adminPages" [routerLink]="[p.url]">
+          {{ p.title }}
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+</ion-app>

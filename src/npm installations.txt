@@ -1,0 +1,5 @@
+npm install firebase
+npm install @angular/fire
+npm install cors
+npm install mysql2 body-parser
+npm install jsqr

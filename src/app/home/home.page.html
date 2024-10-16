@@ -1,0 +1,70 @@
+<ion-header class="header" [class.header-scrolled]="isScrolled">
+  <ion-toolbar>
+    <ion-buttons slot="start" class="burger-icon">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
+    <ion-buttons slot="end" class="desktop-nav">
+      <ion-button routerLink="/about-us">About</ion-button>
+      <ion-button routerLink="/contact">Contact</ion-button>
+      <ion-button routerLink="/privacy-policy">Privacy Policy</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu contentId="main-content" side="start">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item button routerLink="/about-us">About</ion-item>
+      <ion-item button routerLink="/contact">Contact</ion-item>
+      <ion-item button routerLink="/privacy-policy">Privacy Policy</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-content [fullscreen]="true" id="main-content">
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Welcome to Best Brightness</h1>
+      <p>Find the best products at unbeatable prices!</p>
+      <div class="hero-buttons">
+        <ion-button expand="block" size="large" (click)="Signup()">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Register/Login
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="animated-cards">
+      <div class="card" (click)="browseProducts()">
+        <ion-icon name="apps-outline"></ion-icon>
+        <h2>Browse Products</h2>
+        <p>Explore our wide range of products</p>
+      </div>
+      <div class="card" (click)="viewPromotions()">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        <h2>View Promotions</h2>
+        <p>Check out our latest deals and offers</p>
+      </div>
+      <div class="card" (click)="viewAccount()">
+        <ion-icon name="person-outline"></ion-icon>
+        <h2>View Account</h2>
+        <p>Manage your profile and orders</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-title size="small">&copy; 2024 Inventory Store</ion-title>
+  </ion-toolbar>
+</ion-footer>

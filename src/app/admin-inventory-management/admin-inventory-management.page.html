@@ -1,0 +1,276 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admin Inventory Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Search and Filter -->
+  <ion-card class="custom-card">
+    <ion-card-content>
+      <ion-searchbar 
+        placeholder="Search inventory items"
+        [(ngModel)]="searchQuery"
+        (ionChange)="onSearchChange($event)">
+      </ion-searchbar>
+      
+      <ion-item>
+        <ion-label>Category</ion-label>
+        <ion-select [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange($event)">
+          <ion-select-option value="">All Categories</ion-select-option>
+          <ion-select-option *ngFor="let category of categories" [value]="category.name">
+            {{ category.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Status</ion-label>
+        <ion-select [(ngModel)]="selectedStatus" (ionChange)="onStatusChange($event)">
+          <ion-select-option value="">All Status</ion-select-option>
+          <ion-select-option value="available">Available</ion-select-option>
+          <ion-select-option value="outofstock">Out of Stock</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Stock Level</ion-label>
+        <ion-select [(ngModel)]="selectedStockLevel" (ionChange)="onStockLevelChange($event)">
+          <ion-select-option value="">All Levels</ion-select-option>
+          <ion-select-option value="low">Low Stock (<75)</ion-select-option>
+          <ion-select-option value="medium">Medium Stock (75-150)</ion-select-option>
+          <ion-select-option value="high">High Stock (>150)</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <button class="full-button" (click)="openCategoryManagementModal()">
+    Manage Categories
+  </button>
+  <br>
+  <button class="full-button" (click)="openPromotionManagementModal()">
+    Manage Promotions
+  </button>
+
+  <!-- Inventory List -->
+  <ion-card class="custom-card">
+    <ion-card-header>
+      <ion-card-title>Inventory List</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>Item ID</ion-col>
+          <ion-col>Name</ion-col>
+          <ion-col>Category</ion-col>
+          <ion-col>Status</ion-col>
+          <ion-col>Stock</ion-col>
+          <ion-col>Actions</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of filteredProducts">
+          <ion-col>{{ item.product_id }}</ion-col>
+          <ion-col>{{ item.name }}</ion-col>
+          <ion-col>{{ item.category }}</ion-col>
+          <ion-col>{{ item.stock_quantity > 0 ? 'Available' : 'Out of stock' }}</ion-col>
+          <ion-col>
+            <span [ngClass]="{'stock-status': true, 'stock-low': item.stock_quantity < 75, 'stock-medium': item.stock_quantity >= 75 && item.stock_quantity < 150, 'stock-high': item.stock_quantity >= 150}">
+              {{ item.stock_quantity }}
+            </span>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="editItem(item)" fill="clear" color="primary">
+              <ion-icon name="eye-outline"></ion-icon> <!-- View Details icon -->
+            </ion-button>
+            <ion-button (click)="updateQuantity(item, 'add')" fill="clear" color="success">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="updateQuantity(item, 'subtract')" fill="clear" color="warning">
+              <ion-icon name="remove-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="deleteItem(item.product_id)" fill="clear" color="danger">
+              <ion-icon name="trash-outline"></ion-icon> <!-- Cancel Order icon -->
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Low Stock Alerts -->
+  <ion-card class="custom-card">
+    <ion-card-header>
+      <ion-card-title>Low Stock Alerts</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="alert">
+        <p><strong>Low Stock Alert:</strong> The following items are running low:</p>
+        <ul>
+          <li *ngFor="let item of lowStockAlert">
+            {{ item.name }} (ID: {{ item.product_id }}) - Current Stock: <span class="stock-status stock-low">{{ item.stock_quantity }}</span>
+          </li>
+        </ul>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- View Slow/Fast Moving Items -->
+  <ion-card class="custom-card">
+    <ion-card-header>
+      <ion-card-title>Slow/Fast Moving Items</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-segment [(ngModel)]="selectedMovementView" (ionChange)="toggleMovementView($event.detail.value)">
+        <ion-segment-button value="fast">
+          <ion-label>Fast Moving</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="slow">
+          <ion-label>Slow Moving</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+  
+      <ion-list>
+        <ng-container *ngIf="selectedMovementView === 'fast'">
+          <ion-item *ngFor="let item of fastMoving" class="movement-item">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>Category: {{ item.category }}</p>
+              <p class="movement-rate" [ngClass]="getMovementStatusClass(item.movement_rate)">
+                Movement Rate: {{ formatMovementRate(item.movement_rate) }}
+              </p>
+            </ion-label>
+            <ion-note slot="end">
+              Stock: {{ item.stock_quantity }} units
+              <br>
+              Sales: {{ item.sales_count || 0 }}
+            </ion-note>
+          </ion-item>
+        </ng-container>
+  
+        <ng-container *ngIf="selectedMovementView === 'slow'">
+          <ion-item *ngFor="let item of slowMoving" class="movement-item">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>Category: {{ item.category }}</p>
+              <p class="movement-rate" [ngClass]="getMovementStatusClass(item.movement_rate)">
+                Movement Rate: {{ formatMovementRate(item.movement_rate) }}
+              </p>
+            </ion-label>
+            <ion-note slot="end">
+              Stock: {{ item.stock_quantity }} units
+              <br>
+              Sales: {{ item.sales_count || 0 }}
+            </ion-note>
+          </ion-item>
+        </ng-container>
+  
+        <ion-item *ngIf="(selectedMovementView === 'fast' && fastMoving.length === 0) || 
+                         (selectedMovementView === 'slow' && slowMoving.length === 0)">
+          <ion-label class="ion-text-center">
+            No {{ selectedMovementView }} moving items found
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Modal for adding items -->
+  <ion-modal #addItemModal class="custom-modal">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Add New Item</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="dismissModal()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form (ngSubmit)="submitForm()">
+          <ion-item>
+            <ion-label position="floating">Product Name (with size)</ion-label>
+            <ion-input type="text" [(ngModel)]="newItem.name" name="name" required placeholder="e.g., Dishwasher (250ml)" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Category</ion-label>
+            <ion-select [(ngModel)]="newItem.category" name="category" id="category-select" required>
+              <ion-select-option *ngFor="let category of categories" [value]="category.name">
+                {{ category.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Quantity</ion-label>
+            <ion-input type="number" [(ngModel)]="newItem.stock_quantity" name="stock_quantity" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Barcode</ion-label>
+            <ion-input type="text" [(ngModel)]="newItem.barcode" name="barcode" required></ion-input>
+            <ion-button slot="end" (click)="scanBarcode()">
+              <ion-icon name="camera-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Description</ion-label>
+            <ion-textarea [(ngModel)]="newItem.description" name="description" rows="3"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Price</ion-label>
+            <ion-input type="number" [(ngModel)]="newItem.price" name="price" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Image URL</ion-label>
+            <ion-input type="text" [(ngModel)]="newItem.image_url" name="image_url"></ion-input>
+          </ion-item>
+        
+
+          <!-- Cover Image Upload -->
+          <ion-item>
+            <ion-label position="stacked">Cover Image</ion-label>
+            <br>
+            <video #videoElement [hidden]="!showVideoPreview" autoplay></video>
+            <button class="small-button" (click)="takeCoverPicture($event)">
+              <ion-icon name="camera-outline" slot="start"></ion-icon>
+              Upload Cover Image
+          </button>
+            <ion-thumbnail *ngIf="coverImageBase64" class="ion-margin-top">
+              <img [src]="'data:image/jpeg;base64,' + coverImageBase64" alt="Cover Image">
+            </ion-thumbnail>
+          </ion-item>
+          <!-- <button class="small-button" >Open Camera</button> -->
+
+          <!-- Additional Images Upload -->
+          <ion-item>
+            <ion-label position="stacked">Additional Images</ion-label>
+            <br>
+            <button class="small-button" (click)="takeAdditionalPicture($event)">
+              <ion-icon name="images-outline" slot="start"></ion-icon>
+              Add Additional Image
+          </button>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="4" *ngFor="let img of additionalImagesBase64; let i = index">
+                  <ion-thumbnail>
+                    <img [src]="'data:image/jpeg;base64,' + img" alt="Additional Image">
+                    <ion-button fill="clear" (click)="removeAdditionalImage(i, $event)">
+                      <ion-icon name="close-circle"></ion-icon>
+                    </ion-button>
+                  </ion-thumbnail>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <br>
+            <br>
+          </ion-item>
+
+          <button class="full-button" type="submit">Add Item</button>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+  <!-- Action Buttons -->
+<button class="fab" (click)="presentAddItemModal()">
+  <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+</button>

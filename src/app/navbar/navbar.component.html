@@ -1,0 +1,31 @@
+<ion-split-pane contentId="main-content">
+  <!-- Side menu -->
+  <ion-menu contentId="main-content" type="overlay" *ngIf="showNavbar">
+    <ion-content>
+      <ion-list id="inbox-list">
+        <ion-list-header>{{ isAdminPage ? 'Admin Menu' : 'Menu' }}</ion-list-header>
+        <ion-note>{{ isAdminPage ? 'Admin User' : 'Welcome' }}</ion-note>
+
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of (isAdminPage ? adminPages : regularPages)">
+          <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+            <ion-label>{{ p.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <!-- Main content -->
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-split-pane>
+
+<!-- Toolbar -->
+<ion-header *ngIf="showNavbar">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ isAdminPage ? 'Admin' : 'My App' }}</ion-title>
+  </ion-toolbar>
+</ion-header>

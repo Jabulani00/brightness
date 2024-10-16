@@ -1,0 +1,9 @@
+ion-radio-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  ion-radio-group ion-item {
+    --inner-padding-end: 0;
+  }
+  

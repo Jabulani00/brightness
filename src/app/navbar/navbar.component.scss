@@ -1,0 +1,32 @@
+/* Show the regular navbar on larger screens, hide it on small screens */
+.desktop-navbar {
+    display: flex;
+  }
+  
+  @media (max-width: 768px) {
+    .desktop-navbar {
+      display: none; /* Hide navbar on small screens */
+    }
+  
+    ion-menu {
+      display: block; /* Ensure menu is shown on mobile */
+    }
+  }
+  
+
+  
+  ion-button {
+    font-size: 16px;
+    margin: 0 10px;
+  }
+  
+  ion-menu-button {
+    display: none; /* Hide the menu button on larger screens */
+  }
+  
+  @media (max-width: 768px) {
+    ion-menu-button {
+      display: block; /* Show the menu button on mobile screens */
+    }
+  }
+  

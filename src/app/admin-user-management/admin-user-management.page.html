@@ -1,0 +1,110 @@
+<!-- admin-user-management.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admin User Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Collapsible Header -->
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Admin User Management</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Search Bar -->
+  <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterUsers()" placeholder="Search users"></ion-searchbar>
+
+  <!-- Filter Options -->
+  <ion-item>
+  <ion-label>Filter By Role</ion-label>
+  <ion-select [(ngModel)]="selectedFilter" (ionChange)="filterUsers()">
+    <ion-select-option value="all">All</ion-select-option>
+    <ion-select-option value="admin">Admin</ion-select-option>
+    <ion-select-option value="cashier">Cashier</ion-select-option>
+  </ion-select>
+</ion-item>
+
+  <!-- User List -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>User List</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col>ID</ion-col>
+          <ion-col>Name</ion-col>
+          <ion-col>Email</ion-col>
+          <ion-col>Role</ion-col>
+          <ion-col>Actions</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let user of filteredUsers">
+          <ion-col>{{ user.user_id }}</ion-col>
+          <ion-col>{{ user.first_name }} {{ user.last_name }}</ion-col>
+          <ion-col>{{ user.email }}</ion-col>
+          <ion-col>{{ user.role }}</ion-col>
+          <ion-col>
+
+            <ion-button (click)="editUser(user)" fill="clear" color="primary">
+              <ion-icon name="eye-outline"></ion-icon> <!-- View Details icon -->
+            </ion-button>
+            <ion-button (click)="deleteUser(user.user_id)" fill="clear" color="danger">
+              <ion-icon name="trash-outline"></ion-icon> <!-- Cancel Order icon -->
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Action Buttons -->
+
+ 
+  <button class="fab" (click)="presentAddUserModal()">
+    <ion-icon name="person-add-outline"></ion-icon>
+  </button>
+
+
+  <!-- Add User Modal -->
+  <ion-modal [isOpen]="addUserModal?.isOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Add User</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="dismissModal()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <!-- Form fields for adding a user -->
+        <ion-item>
+          <ion-label position="floating">First Name</ion-label>
+          <ion-input [(ngModel)]="firstName" placeholder="Enter first name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Last Name</ion-label>
+          <ion-input [(ngModel)]="lastName" placeholder="Enter last name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input [(ngModel)]="email" placeholder="Enter email" type="email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Role</ion-label>
+          <ion-select [(ngModel)]="role">
+            <ion-select-option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="full" (click)="submitForm()">Submit</ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

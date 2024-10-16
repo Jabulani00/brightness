@@ -1,0 +1,45 @@
+CUSTOMER
+
+1. Home page Best brightness babibli, kmele ube wodwa
+2. Login Forget password in Login not working
+
+CART PAGE CHANGES
+3. cart page Add adresses to database
+4. online orders that will be collected walk-in need to be confirmed by order_id and then intergrate function for payment if card/cash tp proceed checkout
+5. cart page Slip should contain customer details all of them 
+
+BROWSE PRODUCT CHANGES
+6. Product page Search filter type
+7. navbar colors can not be black must be changed
+8. product page, cards should be smaller and images should fit in perfectly and view the products
+
+PROMOTION PAGE CHANGES
+9. Adding promo products to cart 
+
+VIEW ACCOUNT CHANGES
+10. add function to track orders
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+ADMIN DASHBOARD
+1. checking recent activities
+
+ADMIN INVENTORY
+2. add filtering functions
+3. fast and slowing moving items need to work
+
+ADMIN ORDER MANAGEMENT
+4. filtering needs to work 
+5. update status must work
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+CASHIER
+
+1. Needs to see if all the items of the order
+2. Filter orders by type
+3. Search by order_id
+4. payment with card needs to work
+

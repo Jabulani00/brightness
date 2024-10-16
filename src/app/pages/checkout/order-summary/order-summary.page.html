@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>order-summary</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">order-summary</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+  <ion-list>
+    <ion-list-header>Items</ion-list-header>
+    <ion-item *ngFor="let item of items">
+      <ion-label>{{ item.name }}</ion-label>
+      <ion-note slot="end">{{ item.price | currency }}</ion-note>
+    </ion-item>
+   </ion-list>
+
+
+  <ion-item>
+    <ion-label>Shipping Cost:</ion-label>
+    <ion-note>{{ shippingCost | currency }}</ion-note>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Duties & Taxes:</ion-label>
+    <ion-note>{{ dutiesAndTaxes | currency }}</ion-note>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Total:</ion-label>
+    <ion-note>{{ total | currency }}</ion-note>
+  </ion-item>
+
+  <ion-button expand="block" (click)="onConfirmOrder()">Confirm Order</ion-button>
+
+</ion-content>

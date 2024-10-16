@@ -1,0 +1,86 @@
+<ion-content>
+  <div class="container mx-auto p-4">
+    <ion-text color="primary">
+      <h2 class="text-2xl font-bold mb-4">Promotion Management</h2>
+    </ion-text>
+    
+    <form [formGroup]="promotionForm" (ngSubmit)="onSubmit()" class="mb-8">
+      <ion-list>
+        <ion-item>
+          <ion-label position="stacked">Name</ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Product</ion-label>
+          <ion-select formControlName="product_id" placeholder="Select a product">
+            <ion-select-option *ngFor="let product of products" [value]="product.product_id">
+              {{product.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Discount Percentage</ion-label>
+          <ion-input type="number" formControlName="discount_percentage"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Start Date</ion-label>
+          <ion-datetime formControlName="start_date" display-format="YYYY-MM-DD"></ion-datetime>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">End Date</ion-label>
+          <ion-datetime formControlName="end_date" display-format="YYYY-MM-DD"></ion-datetime>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="stacked">Description</ion-label>
+          <ion-textarea formControlName="description" rows="3"></ion-textarea>
+        </ion-item>
+      </ion-list>
+      
+      <ion-button expand="block" type="submit" [disabled]="!promotionForm.valid">
+        {{editMode ? 'Update' : 'Create'}} Promotion
+      </ion-button>
+    </form>
+
+    <ion-list>
+      <ion-list-header>
+        <ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col>Name</ion-col>
+              <ion-col>Discount</ion-col>
+              <ion-col>Start Date</ion-col>
+              <ion-col>End Date</ion-col>
+              <ion-col>Actions</ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-label>
+      </ion-list-header>
+
+      <ion-item *ngFor="let promotion of promotions">
+        <ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col>{{promotion.name}}</ion-col>
+              <ion-col>{{promotion.discount_percentage}}%</ion-col>
+              <ion-col>{{promotion.start_date}}</ion-col>
+              <ion-col>{{promotion.end_date}}</ion-col>
+              <ion-col>
+                <ion-button fill="clear" (click)="editPromotion(promotion)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" (click)="deletePromotion(promotion.promotion_id)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

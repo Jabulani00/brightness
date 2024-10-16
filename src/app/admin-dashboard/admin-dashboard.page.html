@@ -1,0 +1,195 @@
+<ion-app>
+  <ion-menu contentId="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item routerLink="/customer-management" routerDirection="root">
+          <ion-icon name="people-outline" slot="start"></ion-icon>
+          <ion-label>Customer Management</ion-label>
+        </ion-item>
+        <ion-item routerLink="/inventory-management" routerDirection="root">
+          <ion-icon name="cube-outline" slot="start"></ion-icon>
+          <ion-label>Inventory Management</ion-label>
+        </ion-item>
+        <ion-item routerLink="/order-management" routerDirection="root">
+          <ion-icon name="cart-outline" slot="start"></ion-icon>
+          <ion-label>Order Management</ion-label>
+        </ion-item>
+        <ion-item routerLink="/sales-report" routerDirection="root">
+          <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+          <ion-label>Sales Report</ion-label>
+        </ion-item>
+        <ion-item routerLink="/user-management" routerDirection="root">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-label>User Management</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start" class="mobile-only">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Admin Dashboard</ion-title>
+        <ion-buttons slot="end" class="desktop-only">
+          <ion-button routerLink="/admin-dashboard">Admin Dashboard</ion-button>
+          <ion-button routerLink="/admin-customer-management">Customer Management</ion-button>
+          <ion-button routerLink="/admin-inventory-management">Inventory Management</ion-button>
+          <ion-button routerLink="/admin-order-management">Order Management</ion-button>
+          <ion-button routerLink="/admin-sales-report">Sales Report</ion-button>
+          <ion-button routerLink="/admin-user-management">User Management</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content [fullscreen]="true">
+      <!-- Dashboard Summary Cards -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Total Users</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <h2>{{ totalUsers }}</h2>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Total Sales Amount</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <h2>R{{ totalSalesAmount }}</h2>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-md="6" size-lg="4">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Pending Orders</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <h2>{{ pendingOrders }}</h2>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- Statistics Charts -->
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Sales Overview</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div>
+            <canvas #salesChart></canvas>
+          </div>
+          <ion-segment (ionChange)="changeFilter($event)" [value]="currentFilter">
+            <ion-segment-button value="day">
+              <ion-label>Day</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="week">
+              <ion-label>Week</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="month">
+              <ion-label>Month</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="year">
+              <ion-label>Year</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-card-content>
+      </ion-card>
+
+    <!-- Recent Activity Card -->
+<ion-card class="recent-activity-card">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshActivities($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card-header>
+    <ion-card-title>
+      <ion-icon name="time-outline" class="title-icon"></ion-icon>
+      Recent Activity
+    </ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-list lines="none">
+      <!-- Loading State -->
+      <ion-item *ngIf="isLoadingActivities" class="loading-state">
+        <ion-label>
+          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+
+      <!-- Error State -->
+      <ion-item *ngIf="activitiesError" class="error-item">
+        <ion-label color="danger" class="ion-text-center">
+          <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+          <h2>{{ activitiesError }}</h2>
+          <ion-button fill="clear" (click)="refreshActivities($event)">
+            <ion-icon slot="start" name="refresh-outline"></ion-icon>
+            Retry
+          </ion-button>
+        </ion-label>
+      </ion-item>
+
+      <!-- Activities List -->
+      <ng-container *ngIf="!isLoadingActivities && !activitiesError">
+        <ion-item *ngFor="let activity of recentActivities" class="activity-item">
+          <div class="activity-timeline">
+            <div class="timeline-dot" [ngClass]="activity.type"></div>
+            <div class="timeline-line"></div>
+          </div>
+          <ion-icon
+            [name]="activity.type === 'order' ? 'cart-outline' : 'cash-outline'"
+            slot="start"
+            class="activity-icon"
+            [ngClass]="activity.type + '-icon'"
+          ></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h2>{{ activity.message }}</h2>
+            <h3 class="amount">R{{ activity.amount.toFixed(2) }}</h3>
+            <p class="details">
+              <ng-container *ngIf="activity.type === 'order' && activity.status">
+                <ion-badge [color]="getStatusColor(activity.status)">
+                  {{ activity.status }}
+                </ion-badge>
+              </ng-container>
+              <ng-container *ngIf="activity.type === 'sale' && activity.payment_method">
+                <ion-badge color="success">{{ activity.payment_method }}</ion-badge>
+              </ng-container>
+            </p>
+          </ion-label>
+        </ion-item>
+
+        <!-- Empty State -->
+        <ion-item *ngIf="recentActivities.length === 0" class="no-activity-item">
+          <ion-label color="medium" class="ion-text-center">
+            <ion-icon name="notifications-outline" size="large"></ion-icon>
+            <h2>No Recent Activities</h2>
+            <p>New activities will appear here</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+
+    </ion-content>
+  </div>
+</ion-app>

@@ -1,0 +1,57 @@
+.policy-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items vertically */
+  }
+  
+  .policy-card {
+    background-color: #e1f0fc;
+    margin-bottom: 20px;
+    width: 100%; /* Make card full width */
+    text-align: center; /* Center text in the card */
+  }
+  
+  .policy-card ion-card-title {
+    color: #84addd;
+  }
+  
+  .policy-card ion-card-content {
+    font-size: 18px;
+    color: #555;
+  }
+  
+  .icon-container {
+    display: flex;
+    justify-content: center; /* Center icon horizontally */
+  }
+  
+  .icon-animation {
+    font-size: 40px;
+    animation: fadeIn 3s infinite;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  /* Burger menu visibility for mobile */
+.burger-icon {
+  display: none;
+}
+
+.desktop-nav {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .burger-icon {
+    display: block;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+}
+
+  

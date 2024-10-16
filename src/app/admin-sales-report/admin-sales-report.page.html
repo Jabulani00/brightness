@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admin Sales Report</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <!-- Collapsible Header -->
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Admin Sales Report</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <!-- Main Content -->
+  <ion-content>
+    <!-- Sales Summary Cards -->
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6" size-lg="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Total Sales</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <h2>R{{ totalSalesAmount.toFixed(2) }}</h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="6" size-lg="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Total Orders</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <h2>{{ totalOrders }}</h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="6" size-lg="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Average Order Value</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <h2>R{{ averageOrderValue.toFixed(2) }}</h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="6" size-lg="3">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Top Product</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <h2>Widget X</h2>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!-- Sales Table -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Sales Records</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>Sale ID</ion-col>
+            <ion-col>Date</ion-col>
+            <ion-col>Order ID</ion-col>
+            <ion-col>Cashier ID</ion-col>
+            <ion-col>Amount</ion-col>
+            <ion-col>Payment Method</ion-col>
+          </ion-row>
+          <ion-row *ngFor="let sale of salesData">
+            <ion-col>{{ sale.sale_id }}</ion-col>
+            <ion-col>{{ sale.sale_date | date: 'yyyy-MM-dd' }}</ion-col>
+            <ion-col>{{ sale.order_id }}</ion-col>
+            <ion-col>{{ sale.cashier_id }}</ion-col>
+            <ion-col>R{{ sale.total_amount }}</ion-col>
+            <ion-col>{{ sale.payment_method }}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</ion-content>

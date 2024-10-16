@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>shipping-method</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense"> -->
+
+    <!-- <ion-toolbar>
+      <ion-title size="large">shipping-method</ion-title>
+    </ion-toolbar> -->
+
+    <ion-list>
+      <ion-radio-group [(ngModel)]="selectedShippingMethod">
+        <ion-list-header>Select Shipping Method</ion-list-header>
+  
+        <ion-item>
+          <ion-label>Standard</ion-label>
+          <ion-radio value="standard"></ion-radio>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Express</ion-label>
+          <ion-radio value="express"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+
+    <ion-item>
+      <ion-label>Shipping Cost:</ion-label>
+      <ion-note>{{ shippingCost | currency }}</ion-note>
+    </ion-item>
+
+    <ion-button expand="block" (click)="onContinue()">Continue</ion-button>
+  </ion-content>
+
+
+  <!-- </ion-header>
+</ion-content> -->

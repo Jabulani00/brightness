@@ -1,0 +1,75 @@
+<ion-header class="ion-no-border" style="background-color: #0054e9;">
+  <ion-toolbar>
+    
+    <ion-buttons slot="start" class="burger-icon">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
+    <!-- Desktop navigation links for Home, About, Contact, Privacy Policy -->
+    <ion-buttons slot="start" class="desktop-nav" style="display: flex; justify-content: center; width: 100%;">
+      <ion-button routerLink="/home" style="color: white; text-transform: none;">Home</ion-button>
+      <ion-button routerLink="/about-us" style="color: white; text-transform: none;">About</ion-button>
+      <ion-button routerLink="/contact" style="color: white; text-transform: none;">Contact</ion-button>
+      <ion-button routerLink="/privacy-policy" style="color: white; text-transform: none;">Privacy Policy</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-menu contentId="main-content" side="start">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <!-- Side menu links for Home, About, Contact, Privacy Policy -->
+    <ion-list>
+      <ion-item button routerLink="/home">Home</ion-item>
+      <ion-item button routerLink="/about-us">About</ion-item>
+      <ion-item button routerLink="/contact">Contact</ion-item>
+      <ion-item button routerLink="/privacy-policy">Privacy Policy</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-content class="about-content">
+  <div class="about-container">
+    <ion-card class="about-card">
+      <ion-card-header>
+        <div class="icon-container">
+          <ion-icon name="information-circle-outline" class="icon-animation" style="color: #84addd;"></ion-icon>
+        </div>
+        <ion-card-title>Our Story</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Established in 2021, our Cleaning Detergent App revolutionizes the way you approach cleanliness. Our mission is to offer eco-friendly, efficient, and affordable cleaning products.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="about-card">
+      <ion-card-header>
+        <div class="icon-container">
+          <ion-icon name="earth-outline" class="icon-animation" style="color: #84addd;"></ion-icon>
+        </div>
+        <ion-card-title>Our Vision</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        We believe in sustainable living and products that contribute to a cleaner environment while delivering exceptional results.
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="about-card">
+      <ion-card-header>
+        <div class="icon-container">
+          <ion-icon name="people-outline" class="icon-animation" style="color: #84addd;"></ion-icon>
+        </div>
+        <ion-card-title>Our Team</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        Our team of scientists and engineers work tirelessly to bring you the best products to care for your environment.
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

@@ -1,0 +1,68 @@
+ion-content {
+  --background: #f4f5f8;
+}
+
+
+
+.promo-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  ion-card-header {
+    background-color: #ffffff;
+    
+    ion-card-subtitle {
+      font-weight: bold;
+      color: #4a90e2;
+    }
+    
+    ion-card-title {
+      font-size: 1.2rem;
+      color: #333333;
+    }
+  }
+
+  ion-card-content {
+    background-color: #ffffff;
+    padding: 16px;
+    
+    p {
+      margin-bottom: 16px;
+      color: #666666;
+    }
+  }
+
+  ion-button {
+    margin: 16px;
+    --color: #4a90e2;
+  }
+}
+
+ion-chip {
+  margin-bottom: 8px;
+}
+/* Burger menu visibility for mobile */
+.burger-icon {
+  display: none;
+}
+
+.desktop-nav {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .burger-icon {
+    display: block;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+}

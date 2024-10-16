@@ -1,0 +1,25 @@
+.form-input {
+  @apply w-full p-2 border rounded;
+}
+
+.btn-primary {
+  @apply mt-4 px-4 py-2 bg-blue-500 text-white rounded;
+}
+
+.btn-secondary {
+  @apply mr-2 px-3 py-1 bg-yellow-500 text-white rounded;
+}
+
+.btn-danger {
+  @apply px-3 py-1 bg-red-500 text-white rounded;
+}
+
+table {
+  th, td {
+    @apply px-4 py-2 border;
+  }
+  
+  th {
+    @apply font-bold;
+  }
+}

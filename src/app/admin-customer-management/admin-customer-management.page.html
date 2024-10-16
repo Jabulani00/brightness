@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admin Customer Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Collapsible Header -->
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Admin Customer Management</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Search Bar -->
+  <!-- Search Bar -->
+<ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterUsers()" placeholder="Search customers"></ion-searchbar>
+
+
+  <!-- Customer List -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Customer List</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Table Layout for Customers -->
+      <ion-grid>
+        <ion-row>
+          <ion-col>Customer ID</ion-col>
+          <ion-col>Name</ion-col>
+          <ion-col>Email</ion-col>
+          <ion-col>Role</ion-col>
+          <ion-col>Actions</ion-col>
+        </ion-row>
+
+        <!-- Add customer rows here -->
+        <ion-row *ngFor="let user of filteredUsers">
+          <ion-col>{{ user.user_id }}</ion-col>
+          <ion-col>{{ user.first_name }} {{ user.last_name }}</ion-col>
+          <ion-col>{{ user.email }}</ion-col>
+          <ion-col>{{ user.role }}</ion-col>
+          <ion-col>
+
+
+            <ion-button (click)="editUser(user)" fill="clear" color="primary">
+              <ion-icon name="eye-outline"></ion-icon> <!-- View Details icon -->
+            </ion-button>
+            <ion-button (click)="deleteUser(user.user_id)" fill="clear" color="danger">
+              <ion-icon name="trash-outline"></ion-icon> <!-- Cancel Order icon -->
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

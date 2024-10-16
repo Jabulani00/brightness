@@ -1,0 +1,241 @@
+.pos-container {
+  display: flex;
+  height: 100vh;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.discounted-price {
+  color: #e74c3c;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.promotion-tag {
+  background-color: #3498db;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.8em;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.products-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--ion-color-medium);
+}
+
+.datetime-display {
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-dark);
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 1px solid var(--ion-color-medium);
+}
+
+.search-bar {
+  padding: 10px;
+}
+
+ion-segment {
+  --background: var(--ion-color-light);
+  border-bottom: 1px solid var(--ion-color-medium);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.product-card {
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+  }
+
+  .product-info {
+    padding: 10px;
+
+    h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 5px 0;
+      color: var(--ion-color-primary);
+      font-weight: bold;
+    }
+
+    small {
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.cart-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.cart-items {
+  max-height: 50vh; /* Adjust based on space available */
+  overflow-y: auto; /* Enables scrolling if items exceed available space */
+  margin-bottom: 10px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid var(--ion-color-light);
+
+  .item-controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .item-price {
+    font-weight: bold;
+  }
+}
+
+.cart-summary {
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+
+    &.total {
+      font-weight: bold;
+      font-size: 1.2em;
+      border-top: 1px solid var(--ion-color-medium);
+      padding-top: 5px;
+    }
+  }
+}
+
+.barcode-input {
+  margin-bottom: 10px;
+
+  ion-input {
+    --background: var(--ion-color-light);
+    --padding-start: 10px;
+    --padding-end: 10px;
+    border-radius: 8px;
+  }
+}
+
+.numpad {
+  max-height: 150px; /* Constrains the numpad's height */
+  overflow-y: auto; /* Enables scrolling for the numpad */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  
+  ion-button {
+    --background: transparent;
+    --background-activated: var(--ion-color-light);
+    --background-hover: var(--ion-color-light);
+    --color: var(--ion-color-dark);
+    --border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+}
+
+ion-footer ion-toolbar:last-child {
+  padding-bottom: var(--ion-safe-area-bottom);
+}
+
+.receipt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.receipt-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  width: 350px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.receipt-content {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.receipt-content h3, .receipt-content h4 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.receipt-content p {
+  margin: 5px 0;
+}
+
+.receipt-content hr {
+  border: none;
+  border-top: 1px dashed #000;
+  margin: 10px 0;
+}
+
+.receipt-content ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.receipt-content .total {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.receipt-content .thank-you {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}

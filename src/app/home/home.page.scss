@@ -1,0 +1,157 @@
+// Header styles
+.header {
+  &.header-scrolled {
+    background-color: #0054e9 !important;
+    ion-toolbar {
+      --background: #0054e9 !important;
+    }
+  }
+}
+
+ion-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+  background-color: #0054e9;
+
+  ion-toolbar {
+    --background: transparent;
+    --border-width: 0;
+  }
+
+  .desktop-nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+    
+    ion-button {
+      --color: white;
+      font-weight: 500;
+      text-transform: none;
+      font-size: 16px;
+      
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .burger-icon {
+    display: none;
+    
+    ion-menu-button {
+      --color: white;
+    }
+  }
+}
+
+
+// Hero section - keeping your exact CSS
+.hero {
+  height: 100vh;
+  width: 100%;
+  background-image: url('/assets/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+
+
+  // Add overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding: 0 20px;
+    max-width: 800px;
+    
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+    
+    .hero-buttons {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Rest of your styles remain the same
+.main-content {
+  padding: 40px 20px;
+  background: #f5f5f5;
+  
+  .animated-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      text-align: center;
+      
+      &:hover {
+        transform: translateY(-5px);
+      }
+      
+      ion-icon {
+        font-size: 48px;
+        color: #0054e9;
+        margin-bottom: 20px;
+      }
+      
+      h2 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+      
+      p {
+        color: #666;
+      }
+    }
+  }
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .header {
+    .burger-icon {
+      display: block;
+    }
+    
+    .desktop-nav {
+      display: none;
+    }
+  }
+}

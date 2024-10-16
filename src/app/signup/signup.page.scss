@@ -1,0 +1,155 @@
+// ion-content.body {
+//   position: relative;
+//   height: 100vh; /* Ensure the content takes up the full height of the viewport */
+//  // --background: var(--secondary-color); /* Background color */
+// }
+
+// ion-card {
+//   position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%); /* Center the card */
+//   width: 300px; /* Default width */
+//   transition: width 0.3s ease; /* Smooth transition when toggling */
+// }
+
+// ion-card.expand {
+//   width: 500px; /* Expanded width for register form */
+// }
+
+// .auth-container {
+//   background: linear-gradient(135deg, #f5a7a1 0%, #a7c4f5 100%);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+// }
+
+// ion-content {
+//   --background: transparent;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+ion-card {
+  background-color:#84addd;
+  border-radius: 20px;
+  width: 100%;
+  // height: 100%;
+  padding-top:70px;
+  max-width: 400px;
+  margin: 0 auto;
+  z-index: 0;
+  top:50%;
+  transform: translateY(-50%);
+}
+
+ion-card.expand {
+  max-width: 500px;
+}
+
+.avatar{
+  background-color: #0c2c4d;
+  position: absolute;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+.avatar::after {
+  content: "\1F464";
+  color: white;
+  font-size: 40px;
+}
+
+ion-card-header {
+  text-align: center;
+  padding-top: 50px;
+}
+
+ion-card-title {
+  color: #32404e;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+ion-card-subtitle {
+  color: #161b1b;
+  font-size: 14px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+ion-input {
+  --background: #ecf0f1;
+  --padding-start: 40px;
+  --padding-end: 10px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --border-radius: 5px;
+}
+
+.input-group::before {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #2e3333;
+  font-size: 20px;
+  z-index: 1;
+}
+
+.input-group.email::before {
+  content: "\2709";
+}
+
+.input-group.password::before {
+  content: "\1F512";
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+ion-checkbox {
+  --size: 18px;
+  margin-right: 8px;
+}
+
+.forgot-password {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+ion-button {
+  --background: #3498db;
+  --border-radius: 5px;
+  margin-top: 20px;
+}
+
+.register {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register a {
+  color: #4a90e2;
+  text-decoration: none;
+  cursor: pointer;
+}

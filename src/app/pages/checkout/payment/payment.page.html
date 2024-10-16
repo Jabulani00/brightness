@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>payment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">payment</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+  <ion-item>
+    <ion-label position="floating">Card Number</ion-label>
+    <ion-input [(ngModel)]="cardNumber"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Expiration Date</ion-label>
+    <ion-input [(ngModel)]="expirationDate"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">CVV</ion-label>
+    <ion-input [(ngModel)]="cvv"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Promo Code</ion-label>
+    <ion-input [(ngModel)]="promoCode"></ion-input>
+    <ion-button (click)="onApplyPromoCode()">Apply</ion-button>
+  </ion-item>
+
+  <ion-button expand="block" (click)="onContinue()">Continue</ion-button>
+</ion-content>
+
+
