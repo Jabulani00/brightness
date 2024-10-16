@@ -76,71 +76,71 @@
 
 /* Global colors */
 :root {
-    --background: rgb(112, 203, 233);
-    --primary-color: #004e92; /* Deep blue */
-    --secondary-color: #00b4d8; /* Bright complementary color */
-    --text-color: #333; /* Dark text */
-  }
-  
-  ion-content {
-    --background: #f4f5f8;
-  }
-  
-  ion-header {
-    ion-toolbar {
-      --background: #4a90e2;
+  --background: rgb(240, 235, 220); /* Soft beige */
+  --primary-color: #8B4513; /* Saddle brown */
+  --secondary-color: #D2B48C; /* Tan */
+  --text-color: #3d3d3d; /* Dark gray for text */
+}
+
+ion-content {
+  --background: #f4f5f8; /* Light background for content */
+}
+
+ion-header {
+  ion-toolbar {
+      --background: #8B4513; /* Saddle brown for the header */
       
       ion-title {
-        display: flex;
-        align-items: center;
-        
-        ion-icon {
-          margin-right: 8px;
-          font-size: 24px;
-        }
+          display: flex;
+          align-items: center;
+          
+          ion-icon {
+              margin-right: 8px;
+              font-size: 24px;
+          }
       }
-    }
   }
+}
+
+.promo-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
-  .promo-card {
-    margin-bottom: 16px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    
-    img {
+  img {
       height: 200px;
       object-fit: cover;
       width: 100%;
-    }
-  
-    ion-card-header {
-      background-color: #ffffff;
+  }
+
+  ion-card-header {
+      background-color: #ffffff; /* White for brightness */
       
       ion-card-subtitle {
-        font-weight: bold;
-        color: #4a90e2;
+          font-weight: bold;
+          color: #8B4513; /* Saddle brown */
       }
       
       ion-card-title {
-        font-size: 1.2rem;
-        color: #333333;
+          font-size: 1.2rem;
+          color: #3d3d3d; /* Dark gray */
       }
-    }
-  
-    ion-card-content {
-      background-color: #ffffff;
+  }
+
+  ion-card-content {
+      background-color: #ffffff; /* White for brightness */
       padding: 16px;
       
       p {
-        margin-bottom: 16px;
-        color: #666666;
+          margin-bottom: 16px;
+          color: #666666; /* Soft gray */
       }
-    }
   }
-  
-  ion-chip {
-    margin-bottom: 8px;
-  }
+}
+
+ion-chip {
+  margin-bottom: 8px;
+}
 
 /* Styling the order table */
 ion-grid {
@@ -161,13 +161,11 @@ ion-col {
 /* Style only the first row (header) */
 ion-row:first-child ion-col {
   font-weight: bold;
-  background-color: #00b4d8; /* Blue background for headers */
+  background-color: #D2B48C; /* Tan for headers */
   color: white;
 }
 
 /* Buttons styling */
-
-
 
 .fab {
   position: fixed;
@@ -177,7 +175,7 @@ ion-row:first-child ion-col {
   height: 60px;
   border-radius: 100%; /* Make the button circular */
   z-index: 1000; /* Ensure the button hovers over other elements */
-  background-color: #4a90e2; /* Set background color */
+  background-color: #8B4513; /* Saddle brown for the button */
   color: white; /* Button text color */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
   display: flex;
@@ -196,7 +194,7 @@ ion-row:first-child ion-col {
   margin: 0 auto; /* Center the button horizontally */
   display: block;
   padding: 15px; /* Adjust padding as needed */
-  background-color: #4a90e2; /* Customize background color */
+  background-color: #8B4513; /* Saddle brown for buttons */
   color: white; /* Text color */
   border: none;
   border-radius: 8px; /* Slightly rounded corners */
@@ -205,14 +203,13 @@ ion-row:first-child ion-col {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a shadow */
   transition: background-color 0.3s ease; /* Smooth hover effect */
 }
-
 
 .small-button {
   width: 90%; /* Adjust percentage to leave some space on the right */
   max-width: 600px; /* Optional: set a maximum width if needed */ /* Center the button horizontally */
   display: block;
   padding: 15px; /* Adjust padding as needed */
-  background-color: #4a90e2; /* Customize background color */
+  background-color: #8B4513; /* Saddle brown for buttons */
   color: white; /* Text color */
   border: none;
   border-radius: 8px; /* Slightly rounded corners */
@@ -221,4 +218,3 @@ ion-row:first-child ion-col {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: add a shadow */
   transition: background-color 0.3s ease; /* Smooth hover effect */
 }
-
