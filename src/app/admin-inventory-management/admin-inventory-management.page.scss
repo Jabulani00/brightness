@@ -1,28 +1,214 @@
+:root {
+  --background: rgb(240, 235, 220);
+  --primary-color: #8B4513;
+  --secondary-color: #D2B48C;
+  --text-color: #3d3d3d;
+  --accent-color: #4CAF50;
+  --danger-color: #E57373;
+  --warning-color: #FFD54F;
+  --success-color: #81C784;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+ion-content {
+  --background: var(--background);
+  display: flex;
+  flex-direction: column;
+}
+
+ion-toolbar {
+  --background: var(--primary-color);
+  --color: var(--background);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+ion-title {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.custom-card {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-card ion-card-header {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  padding: 15px;
+}
+
+.custom-card ion-card-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 0;
+}
+
+.custom-card ion-card-content {
+  padding: 15px;
+}
+
+ion-searchbar {
+  --background: #fff;
+  --color: var(--text-color);
+  --placeholder-color: var(--text-color);
+  --icon-color: var(--primary-color);
+  --clear-button-color: var(--primary-color);
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+ion-select {
+  --placeholder-color: var(--text-color);
+  --placeholder-opacity: 0.8;
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.full-button {
+  background-color: var(--primary-color);
+  color: var(--background);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.full-button:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+ion-grid {
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+ion-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+ion-row:last-child {
+  border-bottom: none;
+}
+
+ion-col {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.stock-status {
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+}
+
+.stock-low { background-color: var(--danger-color); color: #fff; }
+.stock-medium { background-color: var(--warning-color); color: var(--text-color); }
+.stock-high { background-color: var(--success-color); color: #fff; }
+
+.alert {
+  background-color: #FFCDD2;
+  border: 1px solid #EF9A9A;
+  color: #B71C1C;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 10px;
+  font-weight: 500;
+}
+
+ion-segment {
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+ion-segment-button {
+  --color: var(--primary-color);
+  --color-checked: var(--background);
+  --background-checked: var(--primary-color);
+  font-weight: 600;
+}
+
+.movement-item {
+  --background: #fff;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.movement-rate {
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+  display: inline-block;
+  font-size: 0.8em;
+}
+
+
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-modal .modal-wrapper {
+  background: var(--background);
+  border-radius: 20px;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.custom-modal ion-header {
+  --background: var(--primary-color);
+  color: var(--background);
+}
+
+.custom-modal ion-content {
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  ion-content {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
   .custom-card {
-    margin: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0;
   }
-  .custom-card ion-card-header {
-    background-color: #f4f5f8;
+
+  .full-width {
+    grid-column: 1 / -1;
   }
-  .alert {
-    color: #721c24;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  .stock-status {
-    font-weight: bold;
-  }
-  .stock-low {
-    color: #dc3545;
-  }
-  .stock-medium {
-    color: #ffc107;
-  }
-  .stock-high {
-    color: #28a745;
-  }
+}

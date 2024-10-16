@@ -1,0 +1,174 @@
+:root {
+    --background: rgb(240, 235, 220);
+    --primary-color: #8B4513;
+    --secondary-color: #D2B48C;
+    --text-color: #3d3d3d;
+    --accent-color: #4CAF50;
+    --danger-color: #E57373;
+    --warning-color: #FFD54F;
+    --success-color: #81C784;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+  }
+  
+  ion-content {
+    --background: var(--background);
+  }
+  
+  ion-toolbar {
+    --background: var(--primary-color);
+    --color: var(--background);
+  }
+  
+  ion-title {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  ion-card {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin: 10px;
+  }
+  
+  ion-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  ion-card-header {
+    background-color: var(--secondary-color);
+    padding: 15px;
+  }
+  
+  ion-card-title {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+  
+  ion-card-content {
+    padding: 15px;
+  }
+  
+  ion-card-content h2 {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 10px 0;
+  }
+  
+  /* Sales Summary Cards */
+  ion-grid {
+    padding: 10px;
+  }
+  
+  @media (min-width: 768px) {
+    ion-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  }
+  
+  /* Sales Records Table */
+  .sales-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .sales-table ion-row {
+    border-bottom: 1px solid var(--secondary-color);
+  }
+  
+  .sales-table ion-row:first-child {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+  
+  .sales-table ion-col {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .sales-table {
+      font-size: 0.9em;
+    }
+  
+    .sales-table ion-col {
+      padding: 8px;
+    }
+  }
+  
+  /* Collapsible Header */
+  ion-header[collapse="condense"] ion-toolbar {
+    --background: var(--background);
+    --color: var(--primary-color);
+  }
+  
+  ion-header[collapse="condense"] ion-title {
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+  }
+  
+  /* Additional Styles */
+  .currency {
+    font-family: 'Courier New', monospace;
+  }
+  
+  .date {
+    font-style: italic;
+  }
+  
+  .payment-method {
+    text-transform: capitalize;
+  }
+  
+  /* Accessibility Improvements */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }
+  
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }

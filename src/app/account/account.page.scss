@@ -1,14 +1,171 @@
-ion-segment {
-    margin-bottom: 20px;
+/* Modern Account Page Styles */
+:root {
+  --card-background: #ffffff;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+}
+
+ion-content {
+  --background: var(--background);
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+/* Modern Profile Card */
+.profile-card {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-card ion-card-header {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 20px;
+}
+
+.profile-card ion-card-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.profile-card ion-card-content {
+  padding: 0;
+}
+
+.profile-card ion-item {
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --min-height: 60px;
+}
+
+.profile-card ion-label h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.profile-card ion-label p {
+  font-size: 14px;
+  color: var(--text-color);
+  margin-top: 4px;
+}
+
+.profile-card ion-button {
+  margin: 20px;
+  --border-radius: 8px;
+}
+
+/* Trendy Orders Section */
+.orders-card {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.orders-card ion-card-header {
+  background-color: var(--secondary-color);
+  padding: 16px 20px;
+}
+
+.orders-card ion-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.orders-card ion-select {
+  background-color: var(--background);
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin: 15px 20px;
+  font-size: 14px;
+  --placeholder-color: var(--text-color);
+  --placeholder-opacity: 0.7;
+}
+
+.orders-card ion-item {
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --min-height: 70px;
+  transition: var(--transition);
+}
+
+.orders-card ion-item:hover {
+  --background: rgba(139, 69, 19, 0.05);
+}
+
+.orders-card ion-label h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+
+.orders-card ion-label p {
+  font-size: 14px;
+  color: var(--text-color);
+  margin-top: 2px;
+}
+
+.orders-card ion-button[fill="clear"] {
+  font-size: 14px;
+  font-weight: 500;
+  --color: var(--primary-color);
+  opacity: 0.8;
+  transition: var(--transition);
+}
+
+.orders-card ion-button[fill="clear"]:hover {
+  opacity: 1;
+}
+
+/* Loading and Error States */
+.loading-spinner,
+.error-message,
+.no-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  text-align: center;
+}
+
+.loading-spinner ion-spinner {
+  color: var(--primary-color);
+}
+
+.error-message {
+  color: #B22222;
+}
+
+.no-orders h2 {
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.no-orders p {
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .profile-card,
+  .orders-card {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  
-  form {
-    ion-item {
-      margin-bottom: 15px;
-    }
-  }
-  
-  h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
+}

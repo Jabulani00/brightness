@@ -17,7 +17,7 @@
       </ion-text>
     </div>
 
-    <ion-card *ngIf="currentUser">
+    <ion-card *ngIf="currentUser" class="profile-card">
       <ion-card-header>
         <ion-card-title>Profile Information</ion-card-title>
       </ion-card-header>
@@ -60,7 +60,7 @@
     </ion-card>
 
     <!-- Orders Section -->
-    <ion-card *ngIf="allOrders.length > 0">
+    <ion-card *ngIf="allOrders.length > 0" class="orders-card">
       <ion-card-header>
         <ion-card-title>Your Orders</ion-card-title>
       </ion-card-header>
