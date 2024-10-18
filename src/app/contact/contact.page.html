@@ -1,21 +1,18 @@
-<ion-header class="ion-no-border" style="background-color: #0054e9;">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    
     <ion-buttons slot="start" class="burger-icon">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     
-    <!-- Desktop navigation links for Home, About, Contact, Privacy Policy -->
-    <ion-buttons slot="start" class="desktop-nav" style="display: flex; justify-content: center; width: 100%;">
-      <ion-button routerLink="/home" style="color: white; text-transform: none;">Home</ion-button>
-      <ion-button routerLink="/about-us" style="color: white; text-transform: none;">About</ion-button>
-      <ion-button routerLink="/contact" style="color: white; text-transform: none;">Contact</ion-button>
-      <ion-button routerLink="/privacy-policy" style="color: white; text-transform: none;">Privacy Policy</ion-button>
+    <!-- Desktop navigation links -->
+    <ion-buttons slot="start" class="desktop-nav">
+      <ion-button routerLink="/home">Home</ion-button>
+      <ion-button routerLink="/about-us">About</ion-button>
+      <ion-button routerLink="/contact">Contact</ion-button>
+      <ion-button routerLink="/privacy-policy">Privacy Policy</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-
 
 <ion-menu contentId="main-content" side="start">
   <ion-header>
@@ -23,9 +20,7 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <ion-content>
-    <!-- Side menu links for Home, About, Contact, Privacy Policy -->
     <ion-list>
       <ion-item button routerLink="/home">Home</ion-item>
       <ion-item button routerLink="/about-us">About</ion-item>
@@ -35,44 +30,63 @@
   </ion-content>
 </ion-menu>
 
-
-<ion-content class="contact-content">
+<ion-content class="contact-content" style="--background: url('assets/HAND.png') no-repeat center / cover;">
   <div class="contact-container">
     <ion-card class="contact-card">
       <ion-card-header>
         <div class="icon-container">
-          <ion-icon name="call-outline" class="icon-animation" style="color: #84addd;"></ion-icon>
+          <ion-icon name="call-outline" class="icon-animation"></ion-icon>
         </div>
         <ion-card-title>Contact Information</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <p><strong>Email:</strong> support&#64;cleanapp.com</p>
-        <p><strong>Phone:</strong> +123 456 7890</p>
-        <p><strong>Address:</strong> 123 Clean Street, Eco City, Planet Earth</p>
+        <p><strong>Email:</strong> info&#64;estbrightness.com</p>
+        <p><strong>Phone:</strong> +27 123 456 789</p>
+        <p><strong>Address:</strong> 120 Clarence Road, Durban, South Africa</p>
       </ion-card-content>
     </ion-card>
 
     <ion-card class="contact-card">
       <ion-card-header>
         <div class="icon-container">
-          <ion-icon name="chatbubble-outline" class="icon-animation" style="color: #84addd;"></ion-icon>
+          <ion-icon name="chatbubble-outline" class="icon-animation"></ion-icon>
         </div>
         <ion-card-title>Send Us a Message</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-item>
-          <ion-label position="floating">Your Name</ion-label>
-          <ion-input type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Your Email</ion-label>
-          <ion-input type="email"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Your Message</ion-label>
-          <ion-textarea></ion-textarea>
-        </ion-item>
-        <ion-button expand="block" style="background-color: #84addd; color: white;">Send</ion-button>
+        <form (ngSubmit)="onSubmit()">
+          <ion-item>
+            <ion-label position="floating">Your Name</ion-label>
+            <ion-input type="text" [(ngModel)]="name" name="name" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Your Email</ion-label>
+            <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Your Message</ion-label>
+            <ion-textarea [(ngModel)]="message" name="message" required></ion-textarea>
+          </ion-item>
+          <ion-button expand="block" type="submit">Send</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="map-card">
+      <ion-card-header>
+        <ion-card-title>Find Us</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="map-container">
+          <iframe width="100%" 
+                  height="300" 
+                  frameborder="0" 
+                  scrolling="no" 
+                  marginheight="0" 
+                  marginwidth="0" 
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=30.9966,%20-29.8587,31.0366,%20-29.8187&amp;layer=mapnik&amp;marker=-29.8387,31.0166">
+          </iframe>
+        </div>
       </ion-card-content>
     </ion-card>
   </div>

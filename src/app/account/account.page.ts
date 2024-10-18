@@ -100,11 +100,14 @@ export class AccountPage implements OnInit {
   private fetchOrders() {
     if (!this.userId) return;
   
+    console.log('Fetching orders for user ID:', this.userId);
+  
     this.ordersLoading = true;
     this.http.get<{ orderData: Order[] }>(`${this.ordersApiUrl}?user_id=${this.userId}`).subscribe({
       next: async (response) => {
         console.log('Raw API response:', response);
-        this.allOrders = response.orderData;
+        // Filter orders to only include those matching the current user's ID
+        this.allOrders = response.orderData.filter(order => order.user_id.toString() === this.userId);
         this.filterOrders();
         this.ordersLoading = false;
         

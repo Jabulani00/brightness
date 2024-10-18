@@ -12,6 +12,7 @@
       <ion-button routerLink="/contact" style="color: white; text-transform: none;">Contact</ion-button>
       <ion-button routerLink="/privacy-policy" style="color: white; text-transform: none;">Privacy Policy</ion-button>
     </ion-buttons>
+    <ion-icon class="cart" name="bag-handle-outline" (click)="navigateToCart()"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -36,6 +37,7 @@
 </ion-menu>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="3">

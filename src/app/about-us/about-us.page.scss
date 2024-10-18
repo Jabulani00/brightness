@@ -1,54 +1,195 @@
-.about-content {
-  padding: 20px;
+/* Global Theme Colors */
+:root {
+  --ion-background-color: rgb(240, 235, 220);
+  --ion-color-primary: #8B4513;
+  --ion-color-secondary: #D2B48C;
+  --ion-text-color: #3d3d3d;
+  --ion-color-success: #4CAF50;
+  --ion-color-danger: #E57373;
+  --ion-color-warning: #FFD54F;
+  --card-background: rgba(255, 255, 255, 0.9);
+}
+
+/* General Styling */
+ion-header,
+ion-toolbar {
+  background-color: var(--ion-background-color);
+  --ion-toolbar-background: var(--ion-background-color);
+}
+
+ion-menu-button {
+  color: #D2B48C;
+}
+
+.desktop-nav ion-button {
+  color: #D2B48C;
+  --background: #8B4513;
+  --border-radius: 12px;
+  --padding: 8px 16px;
+  font-weight: bold;
+}
+
+ion-card {
+  background-color: #8B4513;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  margin: 20px 0;
+  --ion-card-content-padding: 16px;
+  color: #8B4513;
+}
+
+ion-card-header {
+  background-color: #D2B48C;
+  border-bottom: 2px solid var(--ion-color-secondary);
+  color: #8B4513;
+}
+
+ion-card-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #8B4513;
+}
+
+ion-card-content {
+  color: var(--ion-text-color);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Layout and Flexbox */
+ion-content {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center items vertically */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 100%; /* Ensure full-height content */
+}
+
+.about-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.content-container {
+  flex: 2;
+  padding: 20px;
+  min-width: 300px; /* Ensure content container is not too small */
+}
+
+.image-container {
+  flex: 1;
+  text-align: center;
+  min-width: 200px; /* Ensure image container does not shrink too much */
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .about-card {
-  background-color: #e1f0fc;
-  margin-bottom: 20px;
-  width: 100%; /* Make card full width */
-  text-align: center; /* Center text in the card */
+  overflow: visible; /* Ensure content within cards is visible */
+  background-color: var(--card-background);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  margin: 20px 0;
+  --ion-card-content-padding: 16px;
 }
 
-.about-card ion-card-title {
-  color: #84addd;
-}
-
-.about-card ion-card-content {
-  font-size: 18px;
-  color: #555;
+[appScrollAnimation] {
+  opacity: 1; /* Ensure animations do not hide content */
+  transform: translateY(0);
 }
 
 .icon-container {
   display: flex;
-  justify-content: center; /* Center icon horizontally */
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #8B4513;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
 }
 
 .icon-animation {
-  font-size: 40px;
-  animation: rotate 5s infinite linear;
+  font-size: 2rem;
+  color: #D2B48C;
+ 
+  animation: bounce 1s infinite alternate;
 }
 
-@keyframes rotate {
-  100% { transform: rotate(360deg); }
-}
-/* Burger menu visibility for mobile */
-.burger-icon {
-  display: none;
-}
-
-.desktop-nav {
-  display: flex;
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-5px);
+  }
 }
 
+/* Menu Styling */
+ion-menu {
+  background-color: var(--ion-background-color);
+}
+
+ion-list {
+  padding: 20px;
+}
+
+ion-item {
+  --background: var(--ion-color-secondary);
+  color: var(--ion-text-color);
+  font-weight: bold;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+ion-item:hover {
+  --background: var(--ion-color-primary);
+  color: white;
+}
+
+/* Responsive Media Queries */
 @media (max-width: 768px) {
-  .burger-icon {
-    display: block;
+  .about-container {
+    flex-direction: column;
+    padding: 20px;
   }
 
-  .desktop-nav {
-    display: none;
+  .content-container {
+    padding: 20px;
   }
+
+  .image-container img {
+    max-width: 150px;
+  }
+}
+
+/* Buttons Style */
+ion-button {
+  --background: var(--ion-color-primary);
+  --color: white;
+  --padding: 10px 20px;
+  --border-radius: 10px;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+ion-button:hover {
+  --background: var(--ion-color-success);
+}
+
+/* Additional Adjustments for Card Visibility */
+ion-card-title, ion-card-content {
+  color: var(--ion-text-color);
 }

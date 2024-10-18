@@ -9,7 +9,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { ScrollAnimationDirective } from './scroll-animation.directive';
 
 // import { AuthFormComponent } from './auth-form/auth-form.component';
 
@@ -22,7 +22,7 @@ import { PromotionManagementComponent } from './promotion-management/promotion-m
 
 @NgModule({
   
-  declarations: [AppComponent, NavbarComponent, CategoryManagementComponent, PromotionManagementComponent],
+  declarations: [AppComponent, NavbarComponent, CategoryManagementComponent, PromotionManagementComponent,ScrollAnimationDirective],
   imports: [
     BrowserModule,
     FormsModule,

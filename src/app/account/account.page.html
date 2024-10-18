@@ -21,7 +21,7 @@
       <ion-card-header>
         <ion-card-title>Profile Information</ion-card-title>
       </ion-card-header>
-      
+     
       <ion-card-content>
         <ion-list>
           <ion-item>
@@ -30,29 +30,31 @@
               <p>{{currentUser.first_name}} {{currentUser.last_name}}</p>
             </ion-label>
           </ion-item>
-
           <ion-item>
             <ion-label>
               <h2>Username</h2>
               <p>{{currentUser.username}}</p>
             </ion-label>
           </ion-item>
-
           <ion-item>
             <ion-label>
               <h2>Email</h2>
               <p>{{currentUser.email}}</p>
             </ion-label>
           </ion-item>
-
           <ion-item>
             <ion-label>
               <h2>Role</h2>
               <p>{{currentUser.role}}</p>
             </ion-label>
           </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>user Id</h2>
+              <p>{{currentUser.user_id}}</p>
+            </ion-label>
+          </ion-item>
         </ion-list>
-
         <ion-button expand="block" color="primary" class="ion-margin-top" (click)="logout()">
           Logout
         </ion-button>
@@ -64,7 +66,7 @@
       <ion-card-header>
         <ion-card-title>Your Orders</ion-card-title>
       </ion-card-header>
-      
+     
       <ion-card-content>
         <ion-select [(ngModel)]="selectedStatus" (ionChange)="onStatusChange()">
           <ion-select-option value="all">All</ion-select-option>
@@ -100,13 +102,15 @@
     </div>
 
     <!-- Error Section -->
-    <div *ngIf="ordersError" class="ion-text-center ion-padding">
-      <ion-text color="danger">
-        <p>{{ ordersError }}</p>
-      </ion-text>
-    </div>
+    <!-- <div *ngIf="!ordersLoading && !ordersError">
+      <h3>Debug: All Orders</h3>
+      <pre>{{ allOrders | json }}</pre>
+    </div> -->
 
-    <!-- Loading Spinner -->
-    <ion-spinner *ngIf="ordersLoading" class="ion-padding"></ion-spinner>
+    <!-- Loading Spinner for Orders -->
+    <div *ngIf="ordersLoading" class="ion-text-center ion-padding">
+      <ion-spinner></ion-spinner>
+      <p>Loading orders...</p>
+    </div>
   </div>
 </ion-content>

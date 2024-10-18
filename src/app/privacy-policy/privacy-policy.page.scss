@@ -1,57 +1,297 @@
-.policy-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center items vertically */
-  }
-  
-  .policy-card {
-    background-color: #e1f0fc;
-    margin-bottom: 20px;
-    width: 100%; /* Make card full width */
-    text-align: center; /* Center text in the card */
-  }
-  
-  .policy-card ion-card-title {
-    color: #84addd;
-  }
-  
-  .policy-card ion-card-content {
-    font-size: 18px;
-    color: #555;
-  }
-  
-  .icon-container {
-    display: flex;
-    justify-content: center; /* Center icon horizontally */
-  }
-  
-  .icon-animation {
-    font-size: 40px;
-    animation: fadeIn 3s infinite;
-  }
-  
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  /* Burger menu visibility for mobile */
-.burger-icon {
-  display: none;
-}
+
+
+
+
 
 .desktop-nav {
   display: flex;
+  justify-content: center;
+  width: 100%;
+
+  ion-button {
+    --color: white;
+    --background: transparent;
+    --background-hover: rgba(255, 255, 255, 0.1);
+    --background-activated: rgba(255, 255, 255, 0.2);
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: none;
+    margin: 0 10px;
+    
+    &:hover {
+      --color: var(--secondary-color);
+    }
+  }
 }
 
-@media (max-width: 768px) {
-  .burger-icon {
-    display: block;
+/* Menu Styles */
+ion-menu {
+  --background: var(--card-background);
+  --width: 250px;
+
+  ion-header {
+    --background: var(--primary-color);
   }
 
+  ion-title {
+    color: white;
+  }
+
+  ion-content {
+    --background: var(--card-background);
+  }
+
+  ion-list {
+    background: transparent;
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: var(--text-color);
+    font-size: 16px;
+    --min-height: 50px;
+    
+    &:hover {
+      --background: var(--secondary-color);
+      --color: white;
+    }
+  }
+}
+
+/* Content Styles */
+.contact-content,
+.policy-content {
+  --background: var(--background);
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+}
+
+.contact-container,
+.policy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Card Styles */
+ion-card {
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    width: calc(50% - 15px);
+  }
+
+  ion-card-header {
+    background-color: var(--secondary-color);
+    padding: 20px;
+
+    ion-card-title {
+      color: var(--primary-color);
+      font-family: var(--font-header);
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+
+  ion-card-content {
+    padding: 20px;
+    color: var(--text-color);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+/* Icon Styles */
+.icon-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+
+  ion-icon {
+    font-size: 48px;
+    color: var(--primary-color);
+  }
+}
+
+.icon-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Form Styles */
+form {
+  ion-item {
+    --background: transparent;
+    --border-color: var(--secondary-color);
+    --highlight-height: 2px;
+    
+    &:hover {
+      --border-color: var(--primary-color);
+    }
+  }
+
+  ion-label {
+    color: var(--text-color);
+    font-weight: 500;
+  }
+
+  ion-input, ion-textarea {
+    --background: white;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid var(--secondary-color);
+  }
+
+  ion-button[type="submit"] {
+    --background: var(--accent-color);
+    --background-hover: var(--primary-color);
+    --color: white;
+    margin-top: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: 50px;
+  }
+}
+
+/* Map Styles */
+.map-container {
+  position: relative;
+  padding-bottom: 75%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.map-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-header);
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+p {
+  margin-bottom: 15px;
+  line-height: 1.8;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
   .desktop-nav {
     display: none;
   }
+
+  ion-card {
+    width: 100%;
+  }
+
+  .contact-container,
+  .policy-container {
+    padding: 0 10px;
+  }
+
+  ion-header ion-title {
+    font-size: 20px;
+  }
 }
 
-  
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Policy Page Specific Styles */
+.policy-card {
+  @media (min-width: 768px) {
+    width: calc(33.33% - 20px);
+  }
+
+  ion-card-header {
+    background-color: var(--primary-color);
+    
+    ion-card-title {
+      color: white;
+      font-size: 20px;
+    }
+  }
+
+  .icon-container ion-icon {
+    color: var(--secondary-color);
+  }
+}
+
+/* Burger Menu Button */
+.burger-icon {
+  ion-menu-button {
+    --color: white;
+  }
+}
