@@ -1,4 +1,4 @@
-:root {
+:host {
   --background: rgb(240, 235, 220);
   --primary-color: #8B4513;
   --secondary-color: #D2B48C;
@@ -10,282 +10,220 @@
   --card-background: rgba(255, 255, 255, 0.9);
 }
 
-body {
-  background-color: var(--background);
-  color: var(--text-color);
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-a {
-  text-decoration: none;
-  color: var(--primary-color);
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--accent-color);
+ion-content {
+  --background: var(--background);
 }
 
 .header {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background-color: rgba(139, 69, 19, 0.9);
-  z-index: 100;
-  transition: background-color 0.3s ease;
-}
-
-.header-scrolled {
-  background-color: var(--primary-color);
-}
-
-.logo-text {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: white;
-  text-transform: uppercase;
-}
-
-.burger-icon ion-menu-button {
-  color: white;
-}
-
-.desktop-nav ion-button {
   --background: transparent;
-  --color: white;
-  --ripple-color: var(--accent-color);
+  transition: --background 0.3s ease;
+
+  &.header-scrolled {
+    --background: rgba(255, 255, 255, 0.9);
+  }
+
+  ion-toolbar {
+    --background: transparent;
+  }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-color);
+  }
+}
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  padding: 20px 0;
 }
 
-.desktop-nav ion-button:hover {
-  --color: var(--accent-color);
-}
-
-.hero {
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
+.swiper-slide {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.hero-overlay {
-  background: rgba(139, 69, 19, 0.7);
-  padding: 3rem;
-  border-radius: 15px;
-  text-align: center;
-  max-width: 600px;
-  margin: 0 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.hero-title {
-  color: white;
-  font-size: 3rem;
-  letter-spacing: 2px;
-  margin-bottom: 1rem;
-  animation: fadeInDown 1s ease-in-out;
-}
-
-.hero-subtitle {
-  color: white;
-  font-size: 1.4rem;
-  margin-bottom: 2rem;
-  animation: fadeInUp 1.2s ease-in-out;
-}
-
-.cta-button {
-  --background: var(--accent-color);
-  font-size: 1.1rem;
-  padding: 0.75rem 2rem;
-  border-radius: 50px;
-  animation: fadeInUp 1.5s ease-in-out;
-}
-
-.cta-button ion-icon {
-  font-size: 1.2rem;
-}
-
-.main-content {
-  padding: 4rem 2rem;
-  background-color: var(--background);
-  text-align: center;
-}
-
-.animated-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.card {
-  background: var(--card-background);
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.hero {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
   position: relative;
-  overflow: hidden;
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-content {
+    text-align: center;
+    color: white;
+    padding: 2rem;
+
+    .hero-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      --background: var(--primary-color);
+      --color: white;
+      font-weight: bold;
+    }
+  }
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.background-container {
+  background-color: var(--background);
+  padding: 2rem 0;
 }
 
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.card:hover::before {
-  opacity: 0.1;
-}
-
-.card-icon {
-  font-size: 3rem;
-  color: var(--accent-color);
-  margin-bottom: 1rem;
-  animation: bounceIn 1s ease;
-}
-
-.card h2 {
-  font-size: 1.6rem;
-  margin-bottom: 0.5rem;
+.section-title {
+  font-family: 'Playfair Display', serif;
   color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.card p {
-  font-size: 1rem;
-  color: var(--text-color);
+.promo-card {
+  background: var(--card-background);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+width: 600px;
+  ion-card-header {
+    background: var(--primary-color);
+    --color: var(--secondary-color);
+  }
+
+  ion-card-content {
+    padding: 1rem;
+   
+    border-radius: 10px;
+  }
+
+  ion-button {
+    --color: var(--secondary-color);
+    background: var(--primary-color);
+    border-radius: 10px;
+  }
 }
 
-footer.custom-footer {
-  background: var(--primary-color);
+.custom-footer {
+  background-color: var(--primary-color);
   color: white;
   padding: 2rem 0;
-  text-align: center;
-}
 
-.footer-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-.footer-section {
-  text-align: center;
-}
-
-.footer-section h3 {
-  color: var(--secondary-color);
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-}
-
-.footer-links {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-links li {
-  margin-bottom: 0.5rem;
-}
-
-.social-icons ion-icon {
-  font-size: 2rem;
-  margin: 0 0.5rem;
-  color: var(--secondary-color);
-  transition: color 0.3s ease;
-}
-
-.social-icons ion-icon:hover {
-  color: var(--accent-color);
-}
-
-.copyright {
-  font-size: 0.9rem;
-  color: var(--secondary-color);
-  margin-top: 2rem;
-}
-
-@keyframes fadeInDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-30px);
+  .footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  .footer-section {
+    margin-bottom: 1rem;
+
+    h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 0.5rem;
+
+        a {
+          color: white;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+
+    a {
+      color: white;
+      font-size: 1.5rem;
+    }
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
   }
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
+// Add styles for the side menu
+.menu-custom {
+  --background: var(--background);
+  
+  ion-header {
+    --background: var(--primary-color);
+    
+    ion-toolbar {
+      --color: white;
+    }
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes bounceIn {
-  0% {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
+  
+  ion-content {
+    --background: var(--background);
+    
+    ion-list {
+      background: transparent;
+      
+      ion-item {
+        --background: transparent;
+        --color: var(--text-color);
+        
+        &:hover {
+          --background: var(--secondary-color);
+        }
+      }
+    }
   }
 }
 
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-  .cta-button {
-    font-size: 1rem;
-    padding: 0.6rem 1.5rem;
+  .hero-content {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
   }
 
-  .footer-content {
+  .custom-footer .footer-content {
     flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-  .animated-cards {
-    grid-template-columns: 1fr;
+    align-items: center;
+    text-align: center;
   }
 }
