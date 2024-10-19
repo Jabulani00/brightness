@@ -21,7 +21,6 @@
       <ion-card-header>
         <ion-card-title>Profile Information</ion-card-title>
       </ion-card-header>
-     
       <ion-card-content>
         <ion-list>
           <ion-item>
@@ -50,14 +49,57 @@
           </ion-item>
           <ion-item>
             <ion-label>
-              <h2>user Id</h2>
+              <h2>User ID</h2>
               <p>{{currentUser.user_id}}</p>
             </ion-label>
           </ion-item>
         </ion-list>
-        <ion-button expand="block" color="primary" class="ion-margin-top" (click)="logout()">
+        <ion-button expand="block"  class="ion-margin-top" (click)="logout()">
           Logout
         </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- New Statistics Section -->
+    <ion-card *ngIf="allOrders.length > 0" class="statistics-card">
+      <ion-card-header>
+        <ion-card-title>Order Statistics</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-card>
+                <ion-card-header>Total Spent</ion-card-header>
+                <ion-card-content class="ion-text-center">
+                  <h2>R{{ totalSpent | number:'1.2-2' }}</h2>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+            <ion-col size="6">
+              <ion-card>
+                <ion-card-header>Average Order Value</ion-card-header>
+                <ion-card-content class="ion-text-center">
+                  <h2>R{{ averageOrderValue | number:'1.2-2' }}</h2>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        
+        <ion-card>
+          <ion-card-header>Order Type Distribution</ion-card-header>
+          <ion-card-content>
+            <canvas #orderTypeChart></canvas>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>Monthly Spending</ion-card-header>
+          <ion-card-content>
+            <canvas #monthlySpendingChart></canvas>
+          </ion-card-content>
+        </ion-card>
       </ion-card-content>
     </ion-card>
 
@@ -66,7 +108,7 @@
       <ion-card-header>
         <ion-card-title>Your Orders</ion-card-title>
       </ion-card-header>
-     
+      
       <ion-card-content>
         <ion-select [(ngModel)]="selectedStatus" (ionChange)="onStatusChange()">
           <ion-select-option value="all">All</ion-select-option>
@@ -86,10 +128,10 @@
           </ion-item>
         </ion-list>
 
-        <ion-button *ngIf="!showAllOrders && allOrders.length > 3" expand="block" fill="clear" (click)="toggleShowAllOrders()">
+        <ion-button *ngIf="!showAllOrders && allOrders.length > 3" expand="block"  (click)="toggleShowAllOrders()">
           Show More
         </ion-button>
-        <ion-button *ngIf="showAllOrders" expand="block" fill="clear" (click)="toggleShowAllOrders()">
+        <ion-button *ngIf="showAllOrders" expand="block"  (click)="toggleShowAllOrders()">
           Show Less
         </ion-button>
       </ion-card-content>
@@ -100,12 +142,6 @@
       <h2>No Orders Found</h2>
       <p>You haven't placed any orders yet.</p>
     </div>
-
-    <!-- Error Section -->
-    <!-- <div *ngIf="!ordersLoading && !ordersError">
-      <h3>Debug: All Orders</h3>
-      <pre>{{ allOrders | json }}</pre>
-    </div> -->
 
     <!-- Loading Spinner for Orders -->
     <div *ngIf="ordersLoading" class="ion-text-center ion-padding">

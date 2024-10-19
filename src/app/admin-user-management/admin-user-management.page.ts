@@ -38,7 +38,9 @@ export class AdminUserManagementPage implements OnInit {
 
   users: any[] = [];
   filteredUsers: any[] = [];
-
+  totalUsers: number = 0;
+  cashierCount: number = 0;
+  adminCount: number = 0;
   constructor(
     private http: HttpClient,
     private toastController: ToastController,
@@ -169,16 +171,25 @@ export class AdminUserManagementPage implements OnInit {
     const role = this.selectedFilter;
 
     this.http.get<any[]>(`http://localhost/user_api/register.php?role=${role}`)
-      .subscribe((response) => {
-        if (Array.isArray(response)) {
-          this.users = response;
-          this.filterUsers();
-        } else {
+      .subscribe(
+        (response) => {
+          if (Array.isArray(response)) {
+            this.users = response;
+            this.updateUserCounts();  // Update counts after fetching users
+          } else {
+            this.presentToast('Error fetching users', 'danger');
+          }
+        },
+        (error) => {
           this.presentToast('Error fetching users', 'danger');
         }
-      }, (error) => {
-        this.presentToast('Error fetching users', 'danger');
-      });
+      );
+  }
+
+  updateUserCounts() {
+    this.totalUsers = this.users.length;
+    this.cashierCount = this.users.filter(user => user.role === 'cashier').length;
+    this.adminCount = this.users.filter(user => user.role === 'admin').length;
   }
 
   filterUsers() {

@@ -1,0 +1,204 @@
+:root {
+    --background: rgb(240, 235, 220);
+    --primary-color: #8B4513;
+    --secondary-color: #D2B48C;
+    --text-color: #3d3d3d;
+    --accent-color: #4CAF50;
+    --danger-color: #E57373;
+    --warning-color: #FFD54F;
+    --success-color: #81C784;
+    --customer-id-color: #6A5ACD;
+    --name-color: #20B2AA;
+    --email-color: #DA70D6;
+    --role-color: #FF7F50;
+  }
+  
+  body {
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+    background-color: var(--background);
+    color: var(--text-color);
+  }
+  
+  ion-content {
+    --background: var(--background);
+  }
+  
+  ion-header {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  }
+  
+  ion-toolbar {
+    --background: transparent;
+  }
+  
+  ion-title {
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  ion-searchbar {
+    --background: rgba(255, 255, 255, 0.9);
+    --color: var(--text-color);
+    --placeholder-color: var(--secondary-color);
+    --icon-color: var(--primary-color);
+    --border-radius: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  ion-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  ion-card-header {
+    background: var(--secondary-color);
+    padding: 20px;
+  }
+  
+  ion-card-title {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  ion-card-content {
+    padding: 0;
+  }
+  
+  ion-grid {
+    padding: 0;
+  }
+  
+  ion-row:first-child {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  ion-row:not(:first-child) {
+    transition: background-color 0.3s ease;
+  }
+  
+  ion-row:not(:first-child):nth-child(even) {
+    background-color: rgba(210, 180, 140, 0.1);
+  }
+  
+  ion-row:not(:first-child):nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  
+  ion-row:not(:first-child):hover {
+    background-color: rgba(210, 180, 140, 0.3);
+  }
+  
+  ion-col {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 14px;
+    border: none;
+  }
+  
+  ion-col[data-label="Customer ID"] {
+    color: var(--customer-id-color);
+  }
+  
+  ion-col[data-label="Name"] {
+    color: var(--name-color);
+  }
+  
+  ion-col[data-label="Email"] {
+    color: var(--email-color);
+  }
+  
+  ion-col[data-label="Role"] {
+    color: var(--role-color);
+  }
+  
+  ion-button {
+    --background: transparent;
+    --box-shadow: none;
+    --ripple-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  ion-button[color="primary"] {
+    --color: var(--primary-color);
+  }
+  
+  ion-button[color="danger"] {
+    --color: var(--danger-color);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    ion-grid {
+      font-size: 12px;
+    }
+    
+    ion-col {
+      padding: 10px;
+    }
+    
+    ion-button {
+      --padding-start: 5px;
+      --padding-end: 5px;
+    }
+    
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    ion-row:first-child {
+      display: none;
+    }
+    
+    ion-row:not(:first-child) {
+      flex-direction: column;
+      border-bottom: 1px solid var(--secondary-color);
+      padding: 10px 0;
+    }
+    
+    ion-col {
+      width: 100%;
+      text-align: left;
+      padding: 5px 15px;
+    }
+    
+    ion-col::before {
+      content: attr(data-label);
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-right: 5px;
+      color: var(--primary-color);
+    }
+  }
+  
+  /* Luxurious Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6d370f;
+  }

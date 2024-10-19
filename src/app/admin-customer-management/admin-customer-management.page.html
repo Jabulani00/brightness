@@ -35,11 +35,12 @@
 
         <!-- Add customer rows here -->
         <ion-row *ngFor="let user of filteredUsers">
-          <ion-col>{{ user.user_id }}</ion-col>
-          <ion-col>{{ user.first_name }} {{ user.last_name }}</ion-col>
-          <ion-col>{{ user.email }}</ion-col>
-          <ion-col>{{ user.role }}</ion-col>
-          <ion-col>
+          <ion-col data-label="Customer ID">{{ user.user_id }}</ion-col>
+          <ion-col data-label="Name">{{ user.first_name }} {{ user.last_name }}</ion-col>
+          <ion-col data-label="Email">{{ user.email }}</ion-col>
+          <ion-col data-label="Role">{{ user.role }}</ion-col>
+          <ion-col data-label="Actions">
+          
 
 
             <ion-button (click)="editUser(user)" fill="clear" color="primary">

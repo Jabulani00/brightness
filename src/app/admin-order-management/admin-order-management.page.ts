@@ -22,6 +22,14 @@ export class AdminOrderManagementPage implements OnInit {
   filterValue: string = '';
   filteredOrderData: any[] = [];
 
+  statusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'payment-received', label: 'Payment Received' },
+    { value: 'order-processed', label: 'Processed' },
+    { value: 'shipped', label: 'Shipped' },
+    { value: 'delivered', label: 'Delivered' }
+  ];
+
   constructor(
     private http: HttpClient,
     private alertController: AlertController,
@@ -37,6 +45,7 @@ export class AdminOrderManagementPage implements OnInit {
       .subscribe(
         response => {
           this.orderData = response.orderData;
+          this.applyFilters();
         },
         error => {
           console.error('Error fetching orders:', error);
@@ -120,59 +129,48 @@ export class AdminOrderManagementPage implements OnInit {
       timestamp: new Date().toISOString()
     });
 
-    this.http.get<any>(`http://localhost/user_api/orders.php?id=${this.currentOrder.order_id}`)
-      .pipe(
-        catchError(this.handleError<any>('fetchOrderDetails'))
-      )
-      .subscribe((orderDetails: any) => {
-        if (orderDetails && orderDetails.success) {
-          const updateData = {
-            status: this.selectedStatus,
-            previousStatus: this.currentOrder.status
-          };
+    const updateData = {
+      status: this.selectedStatus,
+      previousStatus: this.currentOrder.status
+    };
 
-          this.http.put(`http://localhost/user_api/orders.php?id=${this.currentOrder.order_id}`, updateData)
-            .pipe(
-              tap(response => {
-                console.log('Server Response:', {
-                  response,
-                  timestamp: new Date().toISOString()
-                });
-              }),
-              catchError(this.handleError<any>('updateOrderStatus'))
-            )
-            .subscribe({
-              next: (response: any) => {
-                if (response && response.success) {
-                  this.presentToast('Order status updated successfully', 'success');
-                  this.fetchOrders();
-                  this.updateStatusModal.dismiss();
-                } else {
-                  this.presentToast(response && response.message || 'Failed to update order status', 'danger');
-                }
-              }
-            });
-        } else {
-          this.presentToast('Failed to fetch order details', 'danger');
+    this.http.put(`http://localhost/user_api/orders.php?id=${this.currentOrder.order_id}`, updateData)
+      .pipe(
+        tap(response => {
+          console.log('Server Response:', JSON.stringify(response, null, 2));
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error updating order status:', error);
+          if (error.error instanceof ErrorEvent) {
+            // Client-side or network error occurred
+            console.error('An error occurred:', error.error.message);
+          } else {
+            // Backend returned an unsuccessful response code
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${JSON.stringify(error.error)}`
+            );
+          }
+          this.presentToast('Failed to update order status. Please check the console for more details.', 'danger');
+          return throwError(() => new Error('Something bad happened; please try again later.'));
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          if (response && response.success) {
+            this.presentToast('Order status updated successfully', 'success');
+            this.fetchOrders();
+            this.updateStatusModal.dismiss();
+          } else {
+            console.error('Unexpected server response:', response);
+            this.presentToast(response && response.message || 'Failed to update order status', 'danger');
+          }
+        },
+        error: (err) => {
+          console.error('Subscription error:', err);
+          this.presentToast('An error occurred while processing the response', 'danger');
         }
       });
-  }
-
-  private calculateQuantityChanges(orderItems: any[], currentStatus: string, newStatus: string): any[] {
-    const changes = [];
-    const shouldSubtract = newStatus === 'order-processed';
-    const shouldRestore = (currentStatus === 'order-processed') && (newStatus === 'pending' || newStatus === 'payment-received');
-
-    if (shouldSubtract || shouldRestore) {
-      for (const item of orderItems) {
-        changes.push({
-          product_id: item.product_id,
-          quantity: shouldSubtract ? -item.quantity : item.quantity
-        });
-      }
-    }
-
-    return changes;
   }
 
   async deleteOrder(order: any) {

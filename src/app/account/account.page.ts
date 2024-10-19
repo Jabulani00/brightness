@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Chart } from 'chart.js/auto';
 
 interface User {
   user_id: number;
@@ -29,7 +28,11 @@ interface Order {
   templateUrl: './account.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class AccountPage implements OnInit, AfterViewInit {
+  @ViewChild('orderTypeChart') orderTypeChart!: ElementRef;
+  @ViewChild('monthlySpendingChart') monthlySpendingChart!: ElementRef;
+
+
   isLoggedIn: boolean = false;
   currentUser: User | null = null;
   orders: Order[] = [];
@@ -45,6 +48,12 @@ export class AccountPage implements OnInit {
   private apiUrl = 'http://localhost/user_api/login.php';
   private ordersApiUrl = 'http://localhost/user_api/orders.php';
 
+  // New properties for statistics
+  totalSpent: number = 0;
+  averageOrderValue: number = 0;
+  orderTypeData: { type: string, count: number }[] = [];
+  monthlySpendingData: { month: string, amount: number }[] = [];
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -55,9 +64,16 @@ export class AccountPage implements OnInit {
     this.getUserId();
   }
 
+  ngAfterViewInit() {
+    if (this.allOrders.length > 0) {
+      this.createOrderTypeChart();
+      this.createMonthlySpendingChart();
+    }
+  }
+
   async getUserId() {
     this.userId = sessionStorage.getItem('userId');
-    console.log('Stored userId in sessionStorage:', this.userId);  // Log the userId to check
+    console.log('Stored userId in sessionStorage:', this.userId);
     if (!this.userId) {
       this.isLoggedIn = false;
       await this.presentToast('You need to log in to view your account', 'warning');
@@ -78,7 +94,7 @@ export class AccountPage implements OnInit {
         this.isLoggedIn = true;
         this.loading = false;
         await this.presentToast('User details loaded successfully', 'success');
-        this.fetchOrders(); // Fetch orders after user details are loaded
+        this.fetchOrders();
       },
       error: async (error: HttpErrorResponse) => {
         this.error = 'Failed to load user details';
@@ -106,7 +122,6 @@ export class AccountPage implements OnInit {
     this.http.get<{ orderData: Order[] }>(`${this.ordersApiUrl}?user_id=${this.userId}`).subscribe({
       next: async (response) => {
         console.log('Raw API response:', response);
-        // Filter orders to only include those matching the current user's ID
         this.allOrders = response.orderData.filter(order => order.user_id.toString() === this.userId);
         this.filterOrders();
         this.ordersLoading = false;
@@ -116,6 +131,9 @@ export class AccountPage implements OnInit {
           await this.presentToast('No orders found', 'warning');
         } else {
           await this.presentToast('Orders loaded successfully', 'success');
+          this.calculateOrderStatistics();
+          this.createOrderTypeChart();
+          this.createMonthlySpendingChart();
         }
       },
       error: async (error: HttpErrorResponse) => {
@@ -169,5 +187,118 @@ export class AccountPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
+  }
+
+  calculateOrderStatistics() {
+    this.calculateTotalSpent();
+    this.calculateAverageOrderValue();
+    this.calculateOrderTypeDistribution();
+    this.calculateMonthlySpending();
+  }
+
+  calculateTotalSpent() {
+    this.totalSpent = this.allOrders.reduce((sum, order) => sum + parseFloat(order.total_amount), 0);
+  }
+
+  calculateAverageOrderValue() {
+    this.averageOrderValue = this.totalSpent / this.allOrders.length;
+  }
+
+  calculateOrderTypeDistribution() {
+    const typeCount: { [key: string]: number } = {};
+    this.allOrders.forEach(order => {
+      typeCount[order.order_type] = (typeCount[order.order_type] || 0) + 1;
+    });
+    this.orderTypeData = Object.entries(typeCount).map(([type, count]) => ({ type, count }));
+  }
+
+  calculateMonthlySpending() {
+    const monthlySpending: { [key: string]: number } = {};
+    this.allOrders.forEach(order => {
+      const date = new Date(order.created_at);
+      const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      monthlySpending[monthYear] = (monthlySpending[monthYear] || 0) + parseFloat(order.total_amount);
+    });
+    this.monthlySpendingData = Object.entries(monthlySpending)
+      .map(([month, amount]) => ({ month, amount }))
+      .sort((a, b) => a.month.localeCompare(b.month));
+  }
+
+  createOrderTypeChart() {
+    if (!this.orderTypeChart) return;
+
+    const ctx = this.orderTypeChart.nativeElement.getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: this.orderTypeData.map(item => item.type),
+        datasets: [{
+          data: this.orderTypeData.map(item => item.count),
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Order Type Distribution'
+          }
+        }
+      }
+    });
+  }
+
+  createMonthlySpendingChart() {
+    if (!this.monthlySpendingChart) return;
+
+    const ctx = this.monthlySpendingChart.nativeElement.getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: this.monthlySpendingData.map(item => item.month),
+        datasets: [{
+          label: 'Monthly Spending',
+          data: this.monthlySpendingData.map(item => item.amount),
+          backgroundColor: '#36A2EB'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Amount (R)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Month'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Monthly Spending'
+          }
+        }
+      }
+    });
   }
 }

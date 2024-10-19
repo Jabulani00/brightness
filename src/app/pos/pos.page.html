@@ -9,7 +9,7 @@
         <ion-icon name="trash-bin-outline"></ion-icon>
       </ion-button>
       <ion-button (click)="viewAccount()">
-        <ion-icon slot="icon-only"  name="person-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -75,31 +75,26 @@
           <span>R{{ getTotal().toFixed(2) }}</span>
         </div>
       </div>
-     <!-- Amount Paid Input -->
-     <div class="amount-input">
-      <ion-input
-        type="number"
-        placeholder="Enter Amount Paid"
-        [(ngModel)]="amountPaidInput"
-        [required]="paymentType === 'cash'"
-        [disabled]="paymentType !== 'cash'">
-      </ion-input>
-    </div>
-    <!-- Barcode Input -->
-    <div class="barcode-input">
-      <ion-input [(ngModel)]="barcodeInput" placeholder="Enter Barcode" (keyup.enter)="onBarcodeEnter()"></ion-input>
-    </div>
-    <div class="numpad">
-      <ion-button *ngFor="let num of [1,2,3,4,5,6,7,8,9,'C',0,'Enter']"
-        (click)="num === 'C' ? clearNumpad() : num === 'Enter' ? submitNumpad() : appendToNumpad(num.toString())">
-        {{num}}
-      </ion-button>
-    </div>     
+      <div class="amount-input">
+        <ion-input
+          type="number"
+          placeholder="Enter Amount Paid"
+          [(ngModel)]="amountPaidInput"
+          [required]="paymentType === 'cash'"
+          [disabled]="paymentType !== 'cash'">
+        </ion-input>
+      </div>
+      <div class="barcode-input">
+        <ion-input [(ngModel)]="barcodeInput" placeholder="Enter Barcode" (keyup.enter)="onBarcodeEnter()"></ion-input>
+      </div>
+      <div class="numpad">
+        <ion-button *ngFor="let num of [1,2,3,4,5,6,7,8,9,'C',0,'Enter']"
+          (click)="num === 'C' ? clearNumpad() : num === 'Enter' ? submitNumpad() : appendToNumpad(num.toString())">
+          {{num}}
+        </ion-button>
+      </div>     
     </div>
   </div>
-
-
-
 
   <div class="receipt-overlay" *ngIf="receiptVisible">
     <div class="receipt-container">
@@ -124,7 +119,6 @@
         <hr>
         <p class="total"><strong>Total: {{ receiptData?.total | currency:'R' }}</strong></p>
         
-        <!-- Conditionally display the amount paid and change for cash payments -->
         <ng-container *ngIf="receiptData?.paymentType === 'cash'">
           <p><strong>Amount Paid:</strong> {{ receiptData?.amountPaid | currency:'R' }}</p>
           <p><strong>Change:</strong> {{ receiptData?.change | currency:'R' }}</p>
@@ -137,7 +131,6 @@
       <ion-button expand="block" (click)="hideReceipt()">Close Receipt</ion-button>
     </div>
   </div>
-  
 </ion-content>
 
 <ion-footer>
@@ -169,3 +162,27 @@
     </ion-row>
   </ion-toolbar>
 </ion-footer>
+
+<!-- Password Modal -->
+<ion-modal [isOpen]="showPasswordModal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Enter Password</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissPasswordModal()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="password-section">
+        <h3>Enter Password to Enable Item Removal</h3>
+        <ion-input type="password" [(ngModel)]="passwordInput" placeholder="Enter password"></ion-input>
+        <ion-button expand="block" (click)="verifyPassword()" [disabled]="!passwordInput">
+          Verify Password
+        </ion-button>
+        <p>Passwords entered: {{ enteredPasswords.length }} / 3</p>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

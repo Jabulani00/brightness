@@ -33,7 +33,8 @@ export class PromotionManagementComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController,
   ) {
     this.promotionForm = this.fb.group({
       name: ['', Validators.required],
@@ -48,6 +49,9 @@ export class PromotionManagementComponent implements OnInit {
   ngOnInit() {
     this.loadProducts();
     this.loadPromotions();
+  }
+  dismissModal() {
+    this.modalController.dismiss();
   }
 
   async showToast(message: string, color: string) {

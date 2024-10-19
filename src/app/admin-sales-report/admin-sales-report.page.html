@@ -84,4 +84,72 @@
       </ion-card-content>
     </ion-card>
   </ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Sales Trend</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #salesTrendChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Product Sales</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #productSalesChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Monthly Sales</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #monthlySalesChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Payment Methods</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #paymentMethodChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Hourly Sales Trends</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #hourlyTrendsChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Customer Segments</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <canvas #customerSegmentChart></canvas>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

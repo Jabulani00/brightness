@@ -1,25 +1,177 @@
-.form-input {
-  @apply w-full p-2 border rounded;
+/* Promotion Management Styles */
+:root {
+  --background: rgb(240, 235, 220);
+  --primary-color: #8B4513;
+  --secondary-color: #D2B48C;
+  --text-color: #3d3d3d;
+  --accent-color: #4CAF50;
+  --danger-color: #E57373;
+  --warning-color: #FFD54F;
+  --success-color: #81C784;
 }
 
-.btn-primary {
-  @apply mt-4 px-4 py-2 bg-blue-500 text-white rounded;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(139, 69, 19, 0.1);
 }
 
-.btn-secondary {
-  @apply mr-2 px-3 py-1 bg-yellow-500 text-white rounded;
+ion-text[color="primary"] h2 {
+  color: var(--primary-color);
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.btn-danger {
-  @apply px-3 py-1 bg-red-500 text-white rounded;
+/* Form Styles */
+form {
+  background-color: var(--background);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
 }
 
-table {
-  th, td {
-    @apply px-4 py-2 border;
+ion-item {
+  --background: transparent;
+  --border-color: var(--secondary-color);
+  --border-width: 0 0 1px 0;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 1rem;
+}
+
+ion-label {
+  color: var(--primary-color) !important;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+ion-input, ion-select, ion-datetime, ion-textarea {
+  --background: rgba(255, 255, 255, 0.5);
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+}
+
+ion-button[type="submit"] {
+  --background: var(--primary-color);
+  --background-hover: var(--secondary-color);
+  --color: white;
+  margin-top: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+ion-button[type="submit"]:hover {
+  --background: var(--secondary-color);
+  --color: var(--primary-color);
+}
+
+/* List Styles */
+ion-list {
+  background: transparent;
+  padding: 0;
+  margin-top: 3rem;
+}
+
+ion-list-header {
+  background: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+ion-list-header ion-label {
+  color: white !important;
+}
+
+ion-item {
+  --background: rgba(255, 255, 255, 0.7);
+  --border-color: var(--secondary-color);
+  --border-width: 0 0 1px 0;
+  transition: background-color 0.3s ease;
+}
+
+ion-item:last-child {
+  --border-width: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+ion-item:hover {
+  --background: rgba(210, 180, 140, 0.3);
+}
+
+ion-grid {
+  padding: 0;
+}
+
+ion-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem;
+}
+
+ion-button[fill="clear"] {
+  --color: var(--primary-color);
+}
+
+ion-button[fill="clear"][color="danger"] {
+  --color: var(--danger-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
   }
-  
-  th {
-    @apply font-bold;
+
+  ion-text[color="primary"] h2 {
+    font-size: 2rem;
+  }
+
+  form {
+    padding: 1rem;
+  }
+
+  ion-col {
+    padding: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  ion-list-header {
+    display: none;
+  }
+
+  ion-item ion-label ion-grid ion-row {
+    flex-direction: column;
+  }
+
+  ion-item ion-label ion-grid ion-row ion-col {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0;
+  }
+
+  ion-item ion-label ion-grid ion-row ion-col:before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
   }
 }

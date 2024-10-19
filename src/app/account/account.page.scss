@@ -1,171 +1,206 @@
-/* Modern Account Page Styles */
 :root {
-  --card-background: #ffffff;
-  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --border-radius: 12px;
-  --transition: all 0.3s ease;
+  --background: rgb(240, 235, 220);
+  --primary-color: #8B4513;
+  --secondary-color: #D2B48C;
+  --text-color: #3d3d3d;
+  --accent-color: #4CAF50;
+  --danger-color: #E57373;
+  --warning-color: #FFD54F;
+  --success-color: #81C784;
 }
 
+/* Global Styles */
 ion-content {
   --background: var(--background);
-  --padding-start: 16px;
-  --padding-end: 16px;
+  font-family: 'Playfair Display', serif;
 }
 
-/* Modern Profile Card */
-.profile-card {
-  background-color: var(--card-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
-  overflow: hidden;
-  transition: var(--transition);
+ion-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.profile-card ion-card-header {
+ion-card-header {
   background-color: var(--primary-color);
-  color: #ffffff;
+  color: var(--background);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 15px;
+}
+
+ion-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+ion-card-content {
   padding: 20px;
 }
 
-.profile-card ion-card-title {
-  font-size: 24px;
-  font-weight: 600;
+/* Header */
+ion-header ion-toolbar {
+  --background: var(--primary-color);
+  --color: var(--background);
 }
 
-.profile-card ion-card-content {
-  padding: 0;
+ion-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
+/* Profile Card */
 .profile-card ion-item {
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --min-height: 60px;
+  --background: transparent;
+  --border-color: var(--secondary-color);
+  --padding-start: 0;
+  --inner-padding-end: 0;
 }
 
 .profile-card ion-label h2 {
-  font-size: 16px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--primary-color);
+  margin-bottom: 5px;
 }
 
 .profile-card ion-label p {
-  font-size: 14px;
+  font-size: 1rem;
   color: var(--text-color);
-  margin-top: 4px;
 }
 
-.profile-card ion-button {
-  margin: 20px;
-  --border-radius: 8px;
+/* Statistics Card */
+.statistics-card ion-grid {
+  padding: 0;
 }
 
-/* Trendy Orders Section */
-.orders-card {
-  background-color: var(--card-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--card-shadow);
-  overflow: hidden;
+.statistics-card ion-col {
+  padding: 5px;
 }
 
-.orders-card ion-card-header {
+.statistics-card ion-card {
+  margin: 0;
+  box-shadow: none;
+  border: 1px solid var(--secondary-color);
+}
+
+.statistics-card ion-card-header {
   background-color: var(--secondary-color);
-  padding: 16px 20px;
-}
-
-.orders-card ion-card-title {
-  font-size: 20px;
-  font-weight: 600;
   color: var(--primary-color);
-}
-
-.orders-card ion-select {
-  background-color: var(--background);
-  border-radius: 8px;
-  padding: 10px 15px;
-  margin: 15px 20px;
-  font-size: 14px;
-  --placeholder-color: var(--text-color);
-  --placeholder-opacity: 0.7;
-}
-
-.orders-card ion-item {
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --min-height: 70px;
-  transition: var(--transition);
-}
-
-.orders-card ion-item:hover {
-  --background: rgba(139, 69, 19, 0.05);
-}
-
-.orders-card ion-label h2 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary-color);
-  margin-bottom: 4px;
-}
-
-.orders-card ion-label p {
-  font-size: 14px;
-  color: var(--text-color);
-  margin-top: 2px;
-}
-
-.orders-card ion-button[fill="clear"] {
-  font-size: 14px;
-  font-weight: 500;
-  --color: var(--primary-color);
-  opacity: 0.8;
-  transition: var(--transition);
-}
-
-.orders-card ion-button[fill="clear"]:hover {
-  opacity: 1;
-}
-
-/* Loading and Error States */
-.loading-spinner,
-.error-message,
-.no-orders {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
+  font-size: 1rem;
+  padding: 10px;
   text-align: center;
 }
 
-.loading-spinner ion-spinner {
+.statistics-card ion-card-content {
+  padding: 15px;
+}
+
+.statistics-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+/* Charts */
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Orders Card */
+.orders-card ion-select {
+  --padding-start: 0;
+  --padding-end: 0;
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: 15px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
   color: var(--primary-color);
 }
 
-.error-message {
-  color: #B22222;
-}
-
-.no-orders h2 {
-  color: var(--primary-color);
-  font-size: 18px;
+.orders-card ion-item {
+  --background: transparent;
+  --border-color: var(--secondary-color);
+  --padding-start: 0;
+  --inner-padding-end: 0;
   margin-bottom: 10px;
 }
 
-.no-orders p {
-  color: var(--text-color);
-  font-size: 14px;
+.orders-card ion-label h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 5px;
 }
 
-/* Responsive Design */
-@media (min-width: 768px) {
-  .profile-card,
-  .orders-card {
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+.orders-card ion-label p {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  margin-bottom: 3px;
+}
+
+/* Buttons */
+ion-button {
+  --background: var(--primary-color);
+  --color: var(--secondary-color);
+  --border-radius: 25px;
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+ion-button[fill="clear"] {
+  --color: var(--primary-color);
+  font-weight: 400;
+}
+
+/* Loading and Error States */
+ion-spinner {
+  color: var(--primary-color);
+  width: 50px;
+  height: 50px;
+}
+
+.ion-text-center {
+  text-align: center;
+}
+
+.ion-padding {
+  padding: 20px;
+}
+
+ion-text[color="danger"] {
+  color: var(--danger-color);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+  ion-card-title {
+    font-size: 1.3rem;
+  }
+
+  .profile-card ion-label h2,
+  .orders-card ion-label h2 {
+    font-size: 1rem;
+  }
+
+  .profile-card ion-label p,
+  .orders-card ion-label p {
+    font-size: 0.9rem;
+  }
+
+  .statistics-card h2 {
+    font-size: 1.3rem;
   }
 }

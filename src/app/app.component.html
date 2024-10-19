@@ -18,7 +18,7 @@
   <ion-header *ngIf="showAdminButtons">
     <ion-toolbar>
       <ion-buttons slot="end" class="desktop-only">
-        <ion-button *ngFor="let p of adminPages" [routerLink]="[p.url]">
+        <ion-button *ngFor="let p of adminPages" [routerLink]="[p.url]" >
           {{ p.title }}
         </ion-button>
       </ion-buttons>

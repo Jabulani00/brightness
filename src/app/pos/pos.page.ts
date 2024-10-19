@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController,ModalController  } from '@ionic/angular';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
@@ -23,6 +23,7 @@ interface Product {
   discountedPrice?: number; // Add this property
   hasPromotion?: boolean; // Add this property
   promotionName?: string; // Add this property
+  canRemove?: boolean;
 }
 
 
@@ -49,11 +50,17 @@ export class POSPage implements OnInit {
   userId: string | null = null;
   promotions: any[] = [];
 
-
+ // Updated properties for password verification
+ showPasswordModal: boolean = false;
+  passwordInput: string = '';
+  passwords: string[] = ['pass1', 'pass2', 'pass3', 'pass4', 'pass5'];
+  enteredPasswords: string[] = [];
+  isRemoveEnabled: boolean = false;
   constructor(private alertController: AlertController,
               private http: HttpClient,
               private router: Router,
               private promotionService: PromotionService,
+              private modalController: ModalController,
             ) {}
 
   ngOnInit() {
@@ -298,38 +305,64 @@ resetCart() {
 
 addToCart(product: Product) {
   if (isNaN(product.price)) {
-      console.warn(`Product ${product.name} has an invalid price`);
-      this.showAlert('Invalid Price', `${product.name} has an invalid price.`);
-      return;
+    console.warn(`Product ${product.name} has an invalid price`);
+    this.showAlert('Invalid Price', `${product.name} has an invalid price.`);
+    return;
   }
 
-  // Proceed with adding to the cart if price is valid
   const cartItem = this.cart.find(item => item.product_id === product.product_id);
   if (cartItem) {
-      if (cartItem.quantity! < product.stock_quantity) {
-          cartItem.quantity!++;
-      } else {
-          this.showAlert('Out of Stock', 'Not enough stock available.');
-      }
+    if (cartItem.quantity! < product.stock_quantity) {
+      cartItem.quantity!++;
+    } else {
+      this.showAlert('Out of Stock', 'Not enough stock available.');
+    }
   } else {
-      if (product.stock_quantity > 0) {
-          this.cart.push({ ...product, quantity: 1 });
-      } else {
-          this.showAlert('Out of Stock', 'Product is out of stock.');
-      }
+    if (product.stock_quantity > 0) {
+      this.cart.push({ ...product, quantity: 1, canRemove: false });
+    } else {
+      this.showAlert('Out of Stock', 'Product is out of stock.');
+    }
   }
 }
 
-
-  removeFromCart(item: Product) {
-    const cartItem = this.cart.find(cartProd => cartProd.barcode === item.barcode);
-
-    if (cartItem && cartItem.quantity! > 1) {
-      cartItem.quantity!--;
-    } else {
-      this.cart = this.cart.filter(cartProd => cartProd.barcode !== item.barcode);
-    }
+async removeFromCart(item: Product) {
+  if (!item.canRemove) {
+    this.showPasswordModal = true;
+    return;
   }
+
+  const cartItem = this.cart.find(cartProd => cartProd.barcode === item.barcode);
+
+  if (cartItem && cartItem.quantity! > 1) {
+    cartItem.quantity!--;
+  } else {
+    this.cart = this.cart.filter(cartProd => cartProd.barcode !== item.barcode);
+  }
+}
+
+async verifyPassword() {
+  if (this.passwords.includes(this.passwordInput) && !this.enteredPasswords.includes(this.passwordInput)) {
+    this.enteredPasswords.push(this.passwordInput);
+
+    if (this.enteredPasswords.length >= 3) {
+      this.isRemoveEnabled = true;
+      this.cart.forEach(item => item.canRemove = true);
+      await this.showAlert('Success', 'Remove from cart is now enabled for existing items.');
+      this.dismissPasswordModal();
+    } else {
+      await this.showAlert('Password Accepted', `${3 - this.enteredPasswords.length} more password(s) required.`);
+    }
+  } else {
+    await this.showAlert('Invalid Password', 'Please try again.');
+  }
+  this.passwordInput = '';
+}
+
+dismissPasswordModal() {
+  this.showPasswordModal = false;
+  this.passwordInput = '';
+}
 
   getSubtotal() {
     return this.roundToTwo(

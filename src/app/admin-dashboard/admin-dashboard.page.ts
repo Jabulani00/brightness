@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
+import 'chartjs-chart-matrix';
 import { AnimationController } from '@ionic/angular';
 import { forkJoin, catchError, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import 'chartjs-chart-matrix';
 interface Order {
   order_id: number;
   user_id: number;
@@ -31,6 +33,10 @@ interface RecentActivity {
   status?: string;
   payment_method?: string;
 }
+
+
+
+
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.page.html',
@@ -204,71 +210,72 @@ export class AdminDashboardPage implements OnInit, AfterViewInit {
       });
   }
 
-  updateChart() {
-    if (!this.salesChartCanvas) return;
-  
-    const ctx = this.salesChartCanvas.nativeElement.getContext('2d');
-  
-    // Sort the data by date
-    this.salesData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
-    const labels = this.salesData.map(item => {
-      const date = new Date(item.date);
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    });
-    const data = this.salesData.map(item => parseFloat(item.total_amount));
-  
-    const chartConfig: ChartConfiguration = {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Sales',
-          data: data,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1,
-          pointRadius: 5,
-          pointHoverRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Total Amount (R)'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Date'
-            }
-          }
+    // Ensure the plugin is imported
+
+    updateChart() {
+      if (!this.salesChartCanvas) return;
+    
+      const ctx = this.salesChartCanvas.nativeElement.getContext('2d');
+    
+      // Sort the data by date
+      this.salesData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+      const labels = this.salesData.map(item => {
+        const date = new Date(item.date);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+      const data = this.salesData.map(item => parseFloat(item.total_amount));
+    
+      const chartConfig: ChartConfiguration = {
+        type: 'radar',  // Changed chart type to 'radar'
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Sales',
+            data: data,
+            fill: true,  // Filling the area under the radar plot
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Transparent fill color
+            borderColor: 'rgb(75, 192, 192)',  // Border color for the plot
+            pointRadius: 5,
+            pointHoverRadius: 8
+          }]
         },
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top'
+        options: {
+          responsive: true,
+          scales: {
+            r: {  // 'r' is used in radar charts instead of 'x' and 'y'
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              },
+              pointLabels: {
+                display: true,
+                font: {
+                  size: 12
+                }
+              }
+            }
           },
-          tooltip: {
-            mode: 'index',
-            intersect: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+            }
           }
         }
+      };
+    
+      if (this.salesChart) {
+        this.salesChart.destroy();
       }
-    };
-  
-    if (this.salesChart) {
-      this.salesChart.destroy();
+    
+      this.salesChart = new Chart(ctx, chartConfig);
     }
-  
-    this.salesChart = new Chart(ctx, chartConfig);
-  }
-
+    
   changeFilter(event: CustomEvent) {
     const filter = event.detail.value;
     if (filter) {

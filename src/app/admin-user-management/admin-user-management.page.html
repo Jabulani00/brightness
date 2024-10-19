@@ -12,7 +12,40 @@
       <ion-title size="large">Admin User Management</ion-title>
     </ion-toolbar>
   </ion-header>
-
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Total Users</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ totalUsers }}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Cashiers</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ cashierCount }}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col size="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Admins</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ adminCount }}</h2>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <!-- Search Bar -->
   <ion-searchbar [(ngModel)]="searchQuery" (ionChange)="filterUsers()" placeholder="Search users"></ion-searchbar>
 
