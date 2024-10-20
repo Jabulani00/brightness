@@ -16,14 +16,26 @@
 </ion-header>
 
 <ion-content>
-  <div class="pos-container">
-    <div class="products-section">
-      <div class="datetime-display">
-        {{ currentDate | date:'EEEE, MMMM d, y, h:mm:ss a' }}
-      </div>
-      <div class="search-bar">
-        <ion-searchbar placeholder="Search products or scan barcode" (ionChange)="searchProducts($event)"></ion-searchbar>
-      </div>
+ 
+    <div class="pos-container">
+      <div class="products-section">
+        <div class="datetime-display">
+          {{ currentDate | date:'EEEE, MMMM d, y, h:mm:ss a' }}
+        </div>
+        <div class="search-bar">
+          <ion-searchbar 
+            placeholder="Search products or scan barcode" 
+            (ionChange)="searchProducts($event)"
+          ></ion-searchbar>
+          <ion-button (click)="startScan()" *ngIf="!scanActive">
+            <ion-icon name="barcode-outline"></ion-icon>
+            Scan Barcode
+          </ion-button>
+          <ion-button (click)="stopScan()" *ngIf="scanActive">
+            <ion-icon name="close-circle-outline"></ion-icon>
+            Stop Scan
+          </ion-button>
+        </div>
       <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" scrollable>
         <ion-segment-button *ngFor="let category of categories" [value]="category.name">
           <ion-icon [name]="category.icon"></ion-icon>

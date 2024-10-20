@@ -134,38 +134,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Handle DELETE request to remove items from cart
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $user_id = isset($_GET['user_id']) ? filter_var($_GET['user_id'], FILTER_SANITIZE_NUMBER_INT) : null;
-    $clear_all = isset($_GET['clear_all']) ? filter_var($_GET['clear_all'], FILTER_SANITIZE_STRING) : 'false';
-    
-    logMessage("DELETE request received for user_id: $user_id, clear_all: $clear_all");
+    $product_id = isset($_GET['product_id']) ? filter_var($_GET['product_id'], FILTER_SANITIZE_NUMBER_INT) : null;
+    logMessage("DELETE request received for user_id: $user_id, product_id: $product_id");
 
-    if (!$user_id) {
-        logMessage("DELETE request failed: Missing user_id");
-        sendJsonResponse(400, "User ID is required.");
-    }
-
-    try {
-        if ($clear_all === 'true') {
-            // Clear all items for the user
-            $delete_query = "DELETE FROM CART WHERE user_id = :user_id";
-            $stmt = $conn->prepare($delete_query);
-            $stmt->bindParam(":user_id", $user_id);
-            
-            if ($stmt->execute()) {
-                logMessage("All items removed from cart for user_id: $user_id");
-                sendJsonResponse(200, "All items removed from cart.");
-            } else {
-                logMessage("Failed to remove all items from cart for user_id: $user_id");
-                sendJsonResponse(503, "Unable to remove all items from cart.");
-            }
-        } else {
-            // Remove a single item
-            $product_id = isset($_GET['product_id']) ? filter_var($_GET['product_id'], FILTER_SANITIZE_NUMBER_INT) : null;
-            
-            if (!$product_id) {
-                logMessage("DELETE request failed: Missing product_id for single item removal");
-                sendJsonResponse(400, "Product ID is required for single item removal.");
-            }
-
+    if ($user_id && $product_id) {
+        try {
             $delete_query = "DELETE FROM CART WHERE user_id = :user_id AND product_id = :product_id";
             $stmt = $conn->prepare($delete_query);
             $stmt->bindParam(":user_id", $user_id);
@@ -184,10 +157,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
                 logMessage("Failed to remove product from cart");
                 sendJsonResponse(503, "Unable to remove product from cart.");
             }
+        } catch (PDOException $exception) {
+            logMessage("Database error in DELETE request: " . $exception->getMessage());
+            sendJsonResponse(500, "Database error: " . $exception->getMessage());
         }
-    } catch (PDOException $exception) {
-        logMessage("Database error in DELETE request: " . $exception->getMessage());
-        sendJsonResponse(500, "Database error: " . $exception->getMessage());
+    } else {
+        logMessage("DELETE request failed: Missing user_id or product_id");
+        sendJsonResponse(400, "User ID and Product ID are required.");
     }
 }
 

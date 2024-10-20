@@ -112,83 +112,65 @@
         </ion-card-content>
       </ion-card>
 
-    <!-- Recent Activity Card -->
-<ion-card class="recent-activity-card">
-  <ion-refresher slot="fixed" (ionRefresh)="refreshActivities($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
-  <ion-card-header>
-    <ion-card-title>
-      <ion-icon name="time-outline" class="title-icon"></ion-icon>
-      Recent Activity
-    </ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-    <ion-list lines="none">
-      <!-- Loading State -->
-      <ion-item *ngIf="isLoadingActivities" class="loading-state">
-        <ion-label>
-          <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-          <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
-        </ion-label>
-      </ion-item>
-
-      <!-- Error State -->
-      <ion-item *ngIf="activitiesError" class="error-item">
-        <ion-label color="danger" class="ion-text-center">
-          <ion-icon name="alert-circle-outline" size="large"></ion-icon>
-          <h2>{{ activitiesError }}</h2>
-          <ion-button fill="clear" (click)="refreshActivities($event)">
-            <ion-icon slot="start" name="refresh-outline"></ion-icon>
-            Retry
-          </ion-button>
-        </ion-label>
-      </ion-item>
-
-      <!-- Activities List -->
-      <ng-container *ngIf="!isLoadingActivities && !activitiesError">
-        <ion-item *ngFor="let activity of recentActivities" class="activity-item">
-          <div class="activity-timeline">
-            <div class="timeline-dot" [ngClass]="activity.type"></div>
-            <div class="timeline-line"></div>
-          </div>
-          <ion-icon
-            [name]="activity.type === 'order' ? 'cart-outline' : 'cash-outline'"
-            slot="start"
-            class="activity-icon"
-            [ngClass]="activity.type + '-icon'"
-          ></ion-icon>
-          <ion-label class="ion-text-wrap">
-            <h2>{{ activity.message }}</h2>
-            <h3 class="amount">R{{ activity.amount.toFixed(2) }}</h3>
-            <p class="details">
-              <ng-container *ngIf="activity.type === 'order' && activity.status">
-                <ion-badge [color]="getStatusColor(activity.status)">
-                  {{ activity.status }}
-                </ion-badge>
-              </ng-container>
-              <ng-container *ngIf="activity.type === 'sale' && activity.payment_method">
-                <ion-badge color="success">{{ activity.payment_method }}</ion-badge>
-              </ng-container>
-            </p>
+    <!-- View Slow/Fast Moving Items -->
+  <ion-card class="custom-card">
+    <ion-card-header>
+      <ion-card-title>Slow/Fast Moving Items</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-segment [(ngModel)]="selectedMovementView" (ionChange)="toggleMovementView($event)">
+        <ion-segment-button value="fast">
+          <ion-label>Fast Moving</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="slow">
+          <ion-label>Slow Moving</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+  
+      <ion-list>
+        <ng-container *ngIf="selectedMovementView === 'fast'">
+          <ion-item *ngFor="let item of fastMoving" class="movement-item">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>Category: {{ item.category }}</p>
+              <p class="movement-rate" [ngClass]="getMovementStatusClass(item.movement_rate)">
+                Movement Rate: {{ formatMovementRate(item.movement_rate) }}
+              </p>
+            </ion-label>
+            <ion-note slot="end">
+              Stock: {{ item.stock_quantity }} units
+              <br>
+              Sales: {{ item.sales_count || 0 }}
+            </ion-note>
+          </ion-item>
+        </ng-container>
+  
+        <ng-container *ngIf="selectedMovementView === 'slow'">
+          <ion-item *ngFor="let item of slowMoving" class="movement-item">
+            <ion-label>
+              <h2>{{ item.name }}</h2>
+              <p>Category: {{ item.category }}</p>
+              <p class="movement-rate" [ngClass]="getMovementStatusClass(item.movement_rate)">
+                Movement Rate: {{ formatMovementRate(item.movement_rate) }}
+              </p>
+            </ion-label>
+            <ion-note slot="end">
+              Stock: {{ item.stock_quantity }} units
+              <br>
+              Sales: {{ item.sales_count || 0 }}
+            </ion-note>
+          </ion-item>
+        </ng-container>
+  
+        <ion-item *ngIf="(selectedMovementView === 'fast' && fastMoving.length === 0) || 
+                         (selectedMovementView === 'slow' && slowMoving.length === 0)">
+          <ion-label class="ion-text-center">
+            No {{ selectedMovementView }} moving items found
           </ion-label>
         </ion-item>
-
-        <!-- Empty State -->
-        <ion-item *ngIf="recentActivities.length === 0" class="no-activity-item">
-          <ion-label color="medium" class="ion-text-center">
-            <ion-icon name="notifications-outline" size="large"></ion-icon>
-            <h2>No Recent Activities</h2>
-            <p>New activities will appear here</p>
-          </ion-label>
-        </ion-item>
-      </ng-container>
-    </ion-list>
-  </ion-card-content>
-</ion-card>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
     </ion-content>
   </div>

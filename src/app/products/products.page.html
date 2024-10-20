@@ -1,22 +1,23 @@
-<ion-header class="ion-no-border" style="background-color: #0054e9;">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    
     <ion-buttons slot="start" class="burger-icon">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     
-    <!-- Desktop navigation links for Home, About, Contact, Privacy Policy -->
-    <ion-buttons slot="start" class="desktop-nav" style="display: flex; justify-content: center; width: 100%;">
-      <ion-button routerLink="/home" style="color: white; text-transform: none;">Home</ion-button>
-      <ion-button routerLink="/about-us" style="color: white; text-transform: none;">About</ion-button>
-      <ion-button routerLink="/contact" style="color: white; text-transform: none;">Contact</ion-button>
-      <ion-button routerLink="/privacy-policy" style="color: white; text-transform: none;">Privacy Policy</ion-button>
+    <ion-buttons slot="start" class="desktop-nav">
+      <ion-button routerLink="/home">Home</ion-button>
+      <ion-button routerLink="/about-us">About</ion-button>
+      <ion-button routerLink="/contact">Contact</ion-button>
+      <ion-button routerLink="/privacy-policy">Privacy Policy</ion-button>
     </ion-buttons>
-    <ion-icon class="cart" name="bag-handle-outline" (click)="navigateToCart()"></ion-icon>
+    
+    <ion-buttons slot="end">
+      <ion-button (click)="navigateToCart()">
+        <ion-icon name="bag-handle-outline" class="cart-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-
 
 <ion-menu contentId="main-content" side="start">
   <ion-header>
@@ -26,7 +27,6 @@
   </ion-header>
 
   <ion-content>
-    <!-- Side menu links for Home, About, Contact, Privacy Policy -->
     <ion-list>
       <ion-item button routerLink="/home">Home</ion-item>
       <ion-item button routerLink="/about-us">About</ion-item>
@@ -37,71 +37,55 @@
 </ion-menu>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <div class="filters">
+    <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterByCategory(selectedCategory)" placeholder="Category">
+      <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
+    </ion-select>
 
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-md="3">
-        <ion-item>
-          <ion-label>Category</ion-label>
-          <ion-select [(ngModel)]="selectedCategory" (ionChange)="filterByCategory(selectedCategory)">
-            <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
+    <ion-select [(ngModel)]="sortOption" (ionChange)="sortProducts(sortOption)" placeholder="Sort By">
+      <ion-select-option value="name">Name</ion-select-option>
+      <ion-select-option value="price_low_high">Price: Low to High</ion-select-option>
+      <ion-select-option value="price_high_low">Price: High to Low</ion-select-option>
+      <ion-select-option value="rating">Rating</ion-select-option>
+    </ion-select>
+  </div>
 
-      <ion-col size="12" size-md="3">
-        <ion-item>
-          <ion-label>Sort By</ion-label>
-          <ion-select [(ngModel)]="sortOption" (ionChange)="sortProducts(sortOption)">
-            <ion-select-option value="name">Name</ion-select-option>
-            <ion-select-option value="price_low_high">Price: Low to High</ion-select-option>
-            <ion-select-option value="price_high_low">Price: High to Low</ion-select-option>
-            <ion-select-option value="rating">Rating</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="6" size-sm="4" size-md="3" size-lg="2" *ngFor="let product of filteredProducts">
-        <ion-card class="compact-card">
-          <img [src]="product.image_url || product.image" [alt]="product.name" />
-          <ion-card-header>
-            <ion-card-subtitle>
-              <ion-badge color="danger" *ngIf="product.isSale">SALE</ion-badge>
-              <ion-badge color="primary" *ngIf="product.hasPromotion">{{ product.promotionName }}</ion-badge>
-            </ion-card-subtitle>
-            <ion-card-title></ion-card-title>
-            <p><strong>{{ product.name }}</strong></p>
-            <p>{{ product.description }}</p>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="price-container">
-              <span class="price" [class.strikethrough]="product.hasPromotion">
-                R{{ product.price | number:'1.2-2' }}
-              </span>
-              <span *ngIf="product.hasPromotion" class="discounted-price">
-                R{{ product.discountedPrice | number:'1.2-2' }}
-              </span>
-            </div>
-            <div *ngIf="product.stock_quantity > 0; else outOfStock">
-              <div class="quantity-controls">
-                <ion-button fill="clear" (click)="decreaseQuantity(product)">
-                  <ion-icon name="remove-circle-outline"></ion-icon>
-                </ion-button>
-                <span>{{ product.quantity }}</span>
-                <ion-button fill="clear" (click)="increaseQuantity(product)">
-                  <ion-icon name="add-circle-outline"></ion-icon>
-                </ion-button>
-              </div>
-              <ion-button expand="block" fill="clear" (click)="addToCart(product)">Add to Cart</ion-button>
-            </div>
-            <ng-template #outOfStock>
-              <p class="out-of-stock">Out of Stock</p>
-            </ng-template>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let product of filteredProducts">
+      <div class="product-image">
+        <img [src]="product.image_url || product.image" [alt]="product.name" />
+        <div class="product-badges">
+          <ion-badge color="danger" *ngIf="product.isSale">SALE</ion-badge>
+          <ion-badge color="primary" *ngIf="product.hasPromotion">{{ product.promotionName }}</ion-badge>
+        </div>
+      </div>
+      <div class="product-details">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-description">{{ product.description }}</p>
+        <div class="price-container">
+          <span class="price" [class.strikethrough]="product.hasPromotion">
+            R{{ product.price | number:'1.2-2' }}
+          </span>
+          <span *ngIf="product.hasPromotion" class="discounted-price">
+            R{{ product.discountedPrice | number:'1.2-2' }}
+          </span>
+        </div>
+        <div *ngIf="product.stock_quantity > 0; else outOfStock">
+          <div class="quantity-controls">
+            <ion-button fill="clear" (click)="decreaseQuantity(product)">
+              <ion-icon name="remove-circle-outline"></ion-icon>
+            </ion-button>
+            <span>{{ product.quantity }}</span>
+            <ion-button fill="clear" (click)="increaseQuantity(product)">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <ion-button expand="block" (click)="addToCart(product)">Add to Cart</ion-button>
+        </div>
+        <ng-template #outOfStock>
+          <p class="out-of-stock">Out of Stock</p>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </ion-content>

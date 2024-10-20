@@ -1,41 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
-import 'chartjs-chart-matrix';
-import { AnimationController } from '@ionic/angular';
-import { forkJoin, catchError, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import 'chartjs-chart-matrix';
-interface Order {
-  order_id: number;
-  user_id: number;
-  total_amount: string; // Change this to string
-  order_type: string;
-  status: string;
-  
+
+interface Product {
+  product_id: number;
+  name: string;
+  category: string;
+  stock_quantity: number;
+  sales_count: number;
+  last_sale_date: string;
+  movement_rate: number;
+  movement_category: 'fast' | 'medium' | 'slow';
 }
-
-interface Sale {
-  sale_id: number;
-  order_id: number;
-  cashier_id: number;
-  total_amount: number;
-  payment_method: string;
-  amount_paid: number;
-}
-
-interface RecentActivity {
-  id: number;
-  type: 'order' | 'sale';
-  message: string;
-  amount: number;
-  status?: string;
-  payment_method?: string;
-}
-
-
-
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -44,122 +20,36 @@ interface RecentActivity {
 })
 export class AdminDashboardPage implements OnInit, AfterViewInit {
   @ViewChild('salesChart') salesChartCanvas!: ElementRef;
-  
+
   totalUsers: number = 0;
   totalSalesAmount: number = 0;
   pendingOrders: number = 0;
   salesChart: Chart | null = null;
-  salesData: any[] = [];
   currentFilter: string = 'week';
-  recentActivities: RecentActivity[] = [];
-  isLoadingActivities = false;
-  activitiesError: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router,  private animationCtrl: AnimationController) { }
+  products: Product[] = [];
+  fastMoving: Product[] = [];
+  slowMoving: Product[] = [];
+  selectedMovementView: 'fast' | 'slow' = 'fast';
+
+  fastMovingThreshold: number = 100; // Items sold per month threshold for fast-moving
+  slowMovingThreshold: number = 20;  // Items sold per month threshold for slow-moving
+
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.fetchUserCount();
     this.fetchTotalSalesAmount();
     this.fetchPendingOrdersCount();
     this.fetchSalesData(this.currentFilter);
+    this.loadProducts();
   }
-  
 
   ngAfterViewInit() {
     this.updateChart();
-    this.fetchRecentActivities();
   }
-  fetchRecentActivities() {
-    this.isLoadingActivities = true;
-    this.activitiesError = null;
   
-    const orders$ = this.http.get<{orderData: Order[]}>('http://localhost/user_api/orders.php').pipe(
-      map(response => response.orderData),
-      catchError(error => {
-        console.error('Error fetching orders:', error);
-        return of([]);
-      })
-    );
-  
-    const sales$ = this.http.get<{salesData: Sale[]}>('http://localhost/user_api/sales.php').pipe(
-      map(response => response.salesData),
-      catchError(error => {
-        console.error('Error fetching sales:', error);
-        return of([]);
-      })
-    );
-  
-    forkJoin([orders$, sales$]).pipe(
-      map(([orders, sales]) => {
-        console.log('Fetched orders:', orders);
-        console.log('Fetched sales:', sales);
-  
-        const orderActivities: RecentActivity[] = orders.map(order => ({
-          id: order.order_id,
-          type: 'order',
-          message: `Order #${order.order_id} ${order.status}`,
-          amount: parseFloat(order.total_amount), // This should now work correctly
-          status: order.status
-        }));
-  
-        const saleActivities: RecentActivity[] = sales.map(sale => ({
-          id: sale.sale_id,
-          type: 'sale',
-          message: `Sale #${sale.sale_id} completed`,
-          amount: sale.total_amount,
-          payment_method: sale.payment_method
-        }));
-  
-        return [...orderActivities, ...saleActivities]
-          .sort((a, b) => b.id - a.id)
-          .slice(0, 5);
-      })
-    ).subscribe({
-      next: (activities) => {
-        console.log('Processed activities:', activities);
-        this.recentActivities = activities;
-        this.isLoadingActivities = false;
-        setTimeout(() => this.animateActivities(), 100);
-      },
-      error: (error) => {
-        console.error('Error processing activities:', error);
-        this.activitiesError = 'Failed to load recent activities';
-        this.isLoadingActivities = false;
-      }
-    });
-  }
-  async animateActivities() {
-    const activityItems = document.querySelectorAll('.activity-item');
-    for (let i = 0; i < activityItems.length; i++) {
-      const element = activityItems[i] as HTMLElement;
-      const animation = this.animationCtrl.create()
-        .addElement(element)
-        .duration(300)
-        .delay(i * 100)
-        .fromTo('opacity', '0', '1')
-        .fromTo('transform', 'translateX(-20px)', 'translateX(0)')
-        .easing('ease-out');
 
-      await animation.play();
-    }
-  }
-
-
-  getStatusColor(status: string | undefined): string {
-    switch (status) {
-      case 'completed': return 'success';
-      case 'pending': return 'warning';
-      case 'canceled': return 'danger';
-      default: return 'medium';
-    }
-  }
-
-  refreshActivities(event: any) {
-    this.fetchRecentActivities();
-    setTimeout(() => {
-      event.target.complete();
-    }, 1000);
-  }
   fetchUserCount() {
     this.http.get<{ user_count: number }>('http://localhost/user_api/register.php?count=true')
       .subscribe({
@@ -200,9 +90,7 @@ export class AdminDashboardPage implements OnInit, AfterViewInit {
     this.http.get<any[]>(`http://localhost/user_api/sales.php?filter=${filter}`)
       .subscribe({
         next: (response) => {
-          this.salesData = response;
-          console.log('Fetched sales data:', this.salesData);
-          this.updateChart();
+          this.updateChart(response);
         },
         error: (error) => {
           console.error('Error fetching sales data:', error);
@@ -210,72 +98,69 @@ export class AdminDashboardPage implements OnInit, AfterViewInit {
       });
   }
 
-    // Ensure the plugin is imported
+  updateChart(salesData: any[] = []) {
+    if (!this.salesChartCanvas) return;
 
-    updateChart() {
-      if (!this.salesChartCanvas) return;
-    
-      const ctx = this.salesChartCanvas.nativeElement.getContext('2d');
-    
-      // Sort the data by date
-      this.salesData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
-      const labels = this.salesData.map(item => {
-        const date = new Date(item.date);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      });
-      const data = this.salesData.map(item => parseFloat(item.total_amount));
-    
-      const chartConfig: ChartConfiguration = {
-        type: 'radar',  // Changed chart type to 'radar'
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Sales',
-            data: data,
-            fill: true,  // Filling the area under the radar plot
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Transparent fill color
-            borderColor: 'rgb(75, 192, 192)',  // Border color for the plot
-            pointRadius: 5,
-            pointHoverRadius: 8
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            r: {  // 'r' is used in radar charts instead of 'x' and 'y'
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.1)'
-              },
-              pointLabels: {
-                display: true,
-                font: {
-                  size: 12
-                }
+    const ctx = this.salesChartCanvas.nativeElement.getContext('2d');
+
+    salesData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    const labels = salesData.map(item => {
+      const date = new Date(item.date);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+    const data = salesData.map(item => parseFloat(item.total_amount));
+
+    const chartConfig: ChartConfiguration = {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Sales',
+          data: data,
+          fill: true,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgb(75, 192, 192)',
+          pointRadius: 5,
+          pointHoverRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            pointLabels: {
+              display: true,
+              font: {
+                size: 12
               }
             }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
           },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'top'
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-            }
+          tooltip: {
+            mode: 'index',
+            intersect: false,
           }
         }
-      };
-    
-      if (this.salesChart) {
-        this.salesChart.destroy();
       }
-    
-      this.salesChart = new Chart(ctx, chartConfig);
+    };
+
+    if (this.salesChart) {
+      this.salesChart.destroy();
     }
-    
+
+    this.salesChart = new Chart(ctx, chartConfig);
+  }
+
   changeFilter(event: CustomEvent) {
     const filter = event.detail.value;
     if (filter) {
@@ -284,7 +169,115 @@ export class AdminDashboardPage implements OnInit, AfterViewInit {
     }
   }
 
-  navigateTo(route: string) {
-    this.router.navigate([route]);
+  loadProducts() {
+    this.http.get<Product[]>('http://localhost/user_api/products.php')
+      .subscribe(
+        products => {
+          this.products = products;
+          this.calculateMovementRates();
+        },
+        error => {
+          console.error('Error fetching products:', error);
+        }
+      );
+  }
+
+  calculateMovementRates() {
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date(currentDate.getTime() - (30 * 24 * 60 * 60 * 1000));
+  
+    this.http.get<any>('http://localhost/user_api/orders.php?get_order_items=true&start_date=' + thirtyDaysAgo.toISOString())
+      .subscribe(
+        response => {
+          let orderItems: any[] = [];
+          
+          // Check the structure of the response and extract orderItems
+          if (Array.isArray(response)) {
+            orderItems = response;
+          } else if (response && Array.isArray(response.order_items)) {
+            orderItems = response.order_items;
+          } else if (response && typeof response === 'object') {
+            orderItems = Object.values(response);
+          } else {
+            console.error('Unexpected response structure:', response);
+            return;
+          }
+  
+          const salesCountMap = new Map<number, number>();
+          const lastSaleDateMap = new Map<number, string>();
+  
+          orderItems.forEach(item => {
+            const productId = item.product_id;
+            const quantity = item.quantity;
+            const orderDate = new Date(item.created_at);
+  
+            salesCountMap.set(productId, (salesCountMap.get(productId) || 0) + quantity);
+  
+            if (!lastSaleDateMap.has(productId) || new Date(lastSaleDateMap.get(productId)!) < orderDate) {
+              lastSaleDateMap.set(productId, item.created_at);
+            }
+          });
+  
+          this.products.forEach(product => {
+            product.sales_count = salesCountMap.get(product.product_id) || 0;
+            product.last_sale_date = lastSaleDateMap.get(product.product_id) || '';
+  
+            if (product.sales_count && product.last_sale_date) {
+              const lastSaleDate = new Date(product.last_sale_date);
+              const daysSinceLastSale = Math.max(1, Math.floor((currentDate.getTime() - lastSaleDate.getTime()) / (1000 * 60 * 60 * 24)));
+              product.movement_rate = (product.sales_count / daysSinceLastSale) * 30;
+  
+              if (product.movement_rate >= this.fastMovingThreshold) {
+                product.movement_category = 'fast';
+              } else if (product.movement_rate <= this.slowMovingThreshold) {
+                product.movement_category = 'slow';
+              } else {
+                product.movement_category = 'medium';
+              }
+            } else {
+              product.movement_rate = 0;
+              product.movement_category = 'slow';
+            }
+          });
+  
+          this.updateMovementLists();
+        },
+        error => {
+          console.error('Error fetching order items:', error);
+        }
+      );
+  }
+
+  updateMovementLists() {
+    this.fastMoving = this.products
+      .filter(p => p.movement_category === 'fast')
+      .sort((a, b) => b.movement_rate - a.movement_rate)
+      .slice(0, 10);
+
+    this.slowMoving = this.products
+      .filter(p => p.movement_category === 'slow')
+      .sort((a, b) => a.movement_rate - b.movement_rate)
+      .slice(0, 10);
+  }
+
+  toggleMovementView(event: CustomEvent) {
+    const selectedValue = event.detail.value;
+    if (selectedValue === 'fast' || selectedValue === 'slow') {
+      this.selectedMovementView = selectedValue;
+    }
+  }
+
+  getMovementStatusClass(rate: number): string {
+    if (rate >= this.fastMovingThreshold) return 'movement-fast';
+    if (rate <= this.slowMovingThreshold) return 'movement-slow';
+    return 'movement-medium';
+  }
+
+  formatMovementRate(rate: number): string {
+    return rate.toFixed(1) + ' units/month';
+  }
+
+  formatSalesCount(count: number | undefined): string {
+    return count !== undefined ? count.toString() : 'N/A';
   }
 }

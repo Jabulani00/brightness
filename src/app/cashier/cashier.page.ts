@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AlertController, ToastController, IonModal } from '@ionic/angular';
 import { catchError, tap } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-cashier',
@@ -22,6 +22,25 @@ export class CashierPage implements OnInit {
   filterValue: string = '';
   filteredOrderData: any[] = [];
 
+  paymentType: string = '';
+  amountPaidInput: string = '';
+  amountPaid: number = 0;
+  isCheckoutComplete: boolean = false;
+  receiptData: {
+    date: string;
+    cashier: string;
+    cashierId: string;
+    items: any[];
+    subtotal: number;
+    tax: number;
+    total: number;
+    paymentType: string;
+    amountPaid: number;
+    change: number;
+  } | null = null;
+  userId: string = '';
+
+
   constructor(
     private http: HttpClient,
     private alertController: AlertController,
@@ -37,6 +56,7 @@ export class CashierPage implements OnInit {
       .subscribe(
         response => {
           this.orderData = response.orderData;
+          this.applyFilters(); // Apply filters after fetching orders
         },
         error => {
           console.error('Error fetching orders:', error);
@@ -158,23 +178,6 @@ export class CashierPage implements OnInit {
       });
   }
 
-  private calculateQuantityChanges(orderItems: any[], currentStatus: string, newStatus: string): any[] {
-    const changes = [];
-    const shouldSubtract = newStatus === 'order-processed';
-    const shouldRestore = (currentStatus === 'order-processed') && (newStatus === 'pending' || newStatus === 'payment-received');
-
-    if (shouldSubtract || shouldRestore) {
-      for (const item of orderItems) {
-        changes.push({
-          product_id: item.product_id,
-          quantity: shouldSubtract ? -item.quantity : item.quantity
-        });
-      }
-    }
-
-    return changes;
-  }
-
   async deleteOrder(order: any) {
     const alert = await this.alertController.create({
       header: 'Confirm Deletion',
@@ -211,6 +214,189 @@ export class CashierPage implements OnInit {
     await alert.present();
   }
 
+  async checkout() {
+    if (this.currentOrderDetails.order_type !== 'walk-in') {
+      await this.showAlert('Not a Walk-in Order', 'Checkout is only available for walk-in orders.');
+      return;
+    }
+
+    if (!this.paymentType) {
+      await this.showAlert('Payment Type Required', 'Please select a payment type before checkout.');
+      return;
+    }
+  
+    if (this.paymentType === 'cash') {
+      if (!this.amountPaidInput) {
+        await this.showAlert('Amount Required', 'Please enter the amount paid for cash transactions.');
+        return;
+      }
+      await this.handleCashPayment();
+    } else {
+      await this.showCheckoutAlert();
+    }
+  }
+
+  async handleCashPayment() {
+    this.amountPaid = parseFloat(this.amountPaidInput);
+    const total = parseFloat(this.currentOrderDetails.total_amount);
+    if (this.amountPaid < total) {
+      await this.showAlert('Insufficient Amount', 'The amount paid is less than the total due.');
+      return;
+    }
+  
+    const change = this.amountPaid - total;
+  
+    const alert = await this.alertController.create({
+      header: 'Checkout',
+      message: `
+        Total: R${total.toFixed(2)}
+<br>
+        Amount Paid: R${this.amountPaid.toFixed(2)}
+<br>
+        Change: R${change.toFixed(2)}
+      `,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.processOrder();
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+
+  async showCheckoutAlert() {
+    const total = parseFloat(this.currentOrderDetails.total_amount);
+  
+    const alert = await this.alertController.create({
+      header: 'Checkout',
+      message: `Total: R${total.toFixed(2)}`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            this.processOrder();
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+
+  async processOrder() {
+    try {
+      const orderId = this.currentOrderDetails.order_id;
+      const total = parseFloat(this.currentOrderDetails.total_amount);
+  
+      // Update order status
+      const statusUpdateResponse = await this.http.put<{success: boolean, message?: string}>(
+        `http://localhost/user_api/orders.php?id=${orderId}`,
+        { status: 'completed' }
+      ).toPromise();
+  
+      if (!statusUpdateResponse || !statusUpdateResponse.success) {
+        throw new Error(statusUpdateResponse?.message || 'Failed to update order status');
+      }
+  
+      // Record sale
+      const saleData = {
+        order_id: orderId,
+        cashier_id: this.userId,
+        total_amount: total,
+        payment_method: this.paymentType,
+        amount_paid: this.paymentType === 'cash' ? parseFloat(this.amountPaidInput) : total
+      };
+  
+      const saleResponse = await this.http.post<{ success: boolean, message: string, sale_id: number }>(
+        'http://localhost/user_api/sales.php',
+        saleData
+      ).toPromise();
+  
+      if (!saleResponse || !saleResponse.success) {
+        throw new Error(saleResponse?.message || 'Failed to record sale');
+      }
+  
+      // Update stock quantities
+      const stockUpdateRequests: Observable<{success: boolean, message?: string}>[] = this.currentOrderDetails.items.map((item: any) => 
+        this.http.put<{success: boolean, message?: string}>(`http://localhost/user_api/update_stock.php`, {
+          product_id: item.product_id,
+          quantity: item.quantity
+        })
+      );
+  
+      const stockUpdateResponses = await forkJoin(stockUpdateRequests).toPromise();
+      
+      // Check if all stock updates were successful
+      if (stockUpdateResponses) {
+        const allStockUpdatesSuccessful = stockUpdateResponses.every((response) => response && response.success);
+        if (!allStockUpdatesSuccessful) {
+          throw new Error('Failed to update stock quantities for all items');
+        }
+      } else {
+        throw new Error('Failed to update stock quantities');
+      }
+  
+      await this.showAlert('Transaction Complete', `Thank you for your purchase! Order ID: ${orderId}`);
+      this.completeTransaction();
+  
+    } catch (error) {
+      console.error('Error completing transaction:', error);
+      if (error instanceof HttpErrorResponse) {
+        console.error('Error details:', error.error);
+        await this.showAlert('Error', `Network error: ${error.message}`);
+      } else if (error instanceof Error) {
+        await this.showAlert('Error', error.message);
+      } else {
+        await this.showAlert('Error', 'There was an unexpected error completing the transaction. Please try again.');
+      }
+    }
+  }
+
+  completeTransaction() {
+    this.prepareReceiptData();
+    this.isCheckoutComplete = true;
+    this.paymentType = '';
+    this.amountPaidInput = '';
+    this.printReceipt();
+  }
+
+  prepareReceiptData() {
+    const total = parseFloat(this.currentOrderDetails.total_amount);
+    const amountPaid = this.paymentType === 'cash' ? parseFloat(this.amountPaidInput) : total;
+    const change = this.paymentType === 'cash' ? amountPaid - total : 0;
+    
+    this.receiptData = {
+      date: new Date().toLocaleString(),
+      cashier: 'John Doe', // Replace with actual cashier name
+      cashierId: this.userId,
+      items: this.currentOrderDetails.items,
+      subtotal: total, // Assuming no tax for simplicity
+      tax: 0, // Add tax calculation if needed
+      total: total,
+      paymentType: this.paymentType,
+      amountPaid: amountPaid,
+      change: change
+    };
+  }
+
+  printReceipt() {
+    // Implement receipt printing logic here
+    console.log('Receipt Data:', this.receiptData);
+    // You might want to open a new window or use a printing service to actually print the receipt
+  }
+
   private async presentToast(message: string, color: 'success' | 'danger') {
     const toast = await this.toastController.create({
       message: message,
@@ -227,5 +413,14 @@ export class CashierPage implements OnInit {
       this.presentToast(`${operation} failed. Please try again.`, 'danger');
       return of(result as T);
     };
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

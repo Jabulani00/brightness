@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap');
+
 :root {
   --background: rgb(240, 235, 220);
   --primary-color: #8B4513;
@@ -8,168 +10,272 @@
   --warning-color: #FFD54F;
   --success-color: #81C784;
   --card-background: rgba(255, 255, 255, 0.9);
+  --gold: #D4AF37;
+  --soft-gold: #F4E7BE;
 }
 
 body {
   background-color: var(--background);
   color: var(--text-color);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  background-image: 
+    linear-gradient(45deg, var(--soft-gold) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--soft-gold) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--soft-gold) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--soft-gold) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
 ion-header {
   background-color: var(--primary-color) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 ion-toolbar {
   --background: transparent;
+  --border-color: var(--gold);
+  --border-width: 0 0 1px 0;
+  --border-style: solid;
+}
+
+ion-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 ion-button {
-  --color: var(--secondary-color);
-  font-weight: bold;
+  --background: transparent;
+  --background-activated: var(--soft-gold);
+  --background-focused: var(--soft-gold);
+  --color: var(--gold);
+  --color-activated: var(--primary-color);
+  --color-focused: var(--primary-color);
+  --box-shadow: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .desktop-nav ion-button {
-  --color: var(--secondary-color);
-  font-size: 1.1em;
-  margin: 0 10px;
+  font-size: 14px;
+  margin: 0 15px;
+  position: relative;
+}
+
+.desktop-nav ion-button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 50%;
+  background-color: var(--gold);
   transition: all 0.3s ease;
 }
 
-.desktop-nav ion-button:hover {
-  --color: var(--accent-color);
-  transform: translateY(-2px);
+.desktop-nav ion-button:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.cart-icon {
+  color: var(--gold);
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1);
 }
 
 ion-menu ion-content {
-  --background: var(--secondary-color);
+  --background: var(--background);
 }
 
 ion-menu ion-item {
   --background: transparent;
   --color: var(--primary-color);
-  font-weight: bold;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  letter-spacing: 1px;
 }
 
-ion-menu ion-item:hover {
-  --background: rgba(255, 255, 255, 0.2);
+ion-content {
+  --background: transparent;
 }
 
-.cart {
-  font-size: 2em;
-  color: var(--primary-color);
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1000;
-  background: var(--secondary-color);
-  padding: 10px;
-  border-radius: 50%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+.filters {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.cart:hover {
-  transform: scale(1.1);
-  color: var(--accent-color);
-}
-
-ion-select {
+.filters ion-select {
+  width: 200px;
+  margin: 0 15px;
   --placeholder-color: var(--primary-color);
-  --placeholder-opacity: 0.8;
+  --placeholder-opacity: 0.7;
 }
 
-ion-card {
-  background: var(--card-background);
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+.product-card {
+  background-color: var(--card-background);
   border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-ion-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-ion-card img {
-  height: 200px;
-  object-fit: cover;
-  width: 100%;
-}
-
-ion-card-header {
-  background-color: rgba(139, 69, 19, 0.1);
-  padding: 15px;
-}
-
-ion-card-title {
-  color: var(--primary-color);
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-ion-card-subtitle {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--gold), var(--soft-gold), var(--gold));
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+.product-image {
+  position: relative;
+  padding-top: 100%;
+  overflow: hidden;
+}
+
+.product-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.1);
+}
+
+.product-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.product-badges ion-badge {
+  margin-bottom: 5px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.product-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-color);
   margin-bottom: 10px;
 }
 
-ion-badge {
-  font-size: 0.8em;
-  padding: 5px 10px;
-  border-radius: 15px;
+.product-description {
+  font-size: 14px;
+  color: var(--text-color);
+  margin-bottom: 15px;
+  line-height: 1.6;
 }
 
 .price-container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .price {
-  font-size: 1.2em;
+  font-size: 22px;
+  font-weight: 600;
   color: var(--primary-color);
-  font-weight: bold;
 }
 
 .discounted-price {
-  font-size: 1.2em;
+  font-size: 22px;
+  font-weight: 600;
   color: var(--accent-color);
-  font-weight: bold;
 }
 
 .strikethrough {
   text-decoration: line-through;
   color: var(--danger-color);
-  opacity: 0.7;
+  font-size: 18px;
 }
 
 .quantity-controls {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+  background-color: var(--soft-gold);
+  border-radius: 25px;
+  padding: 5px;
 }
 
-.quantity-controls ion-button {
-  --padding-start: 5px;
-  --padding-end: 5px;
+ion-button[fill="clear"] {
+  --color: var(--primary-color);
 }
 
 .quantity-controls span {
-  font-size: 1.2em;
-  font-weight: bold;
+  font-weight: 600;
   color: var(--primary-color);
 }
 
 .out-of-stock {
   color: var(--danger-color);
-  font-weight: bold;
+  font-weight: 600;
   text-align: center;
+  font-size: 16px;
   margin-top: 10px;
 }
 
@@ -177,10 +283,56 @@ ion-badge {
   .desktop-nav {
     display: none !important;
   }
+  
+  .burger-icon {
+    display: block !important;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filters ion-select {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
 }
 
 @media (min-width: 769px) {
   .burger-icon {
     display: none !important;
   }
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.product-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  animation: shimmer 4s infinite;
+  pointer-events: none;
 }

@@ -5,6 +5,10 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Max-Age: 3600");
 header("Content-Type: application/json; charset=UTF-8");
 
+header("Access-Control-Allow-Origin: http://localhost:8100");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
 // Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -77,7 +81,39 @@ try {
             } else {
                 throw new Exception("Error: " . $conn->error);
             }
-        } else {
+        }
+        elseif (isset($_GET['start_date'])) {
+            // New code for fetching product-wise sales data
+            $start_date = $conn->real_escape_string($_GET['start_date']);
+            $dateColumn = getDateColumnName($conn);
+            
+            $sql = "SELECT oi.product_id, p.name AS product_name, SUM(oi.quantity) AS total_quantity, 
+                           MAX(s.$dateColumn) AS last_sale_date
+                    FROM ORDER_ITEMS oi
+                    JOIN ORDERS o ON oi.order_id = o.order_id
+                    JOIN SALES s ON o.order_id = s.order_id
+                    JOIN PRODUCTS p ON oi.product_id = p.product_id
+                    WHERE s.$dateColumn >= '$start_date'
+                    GROUP BY oi.product_id, p.name
+                    ORDER BY total_quantity DESC";
+
+            $result = $conn->query($sql);
+            if ($result === false) {
+                throw new Exception($conn->error);
+            }
+
+            $salesData = [];
+            while ($row = $result->fetch_assoc()) {
+                $salesData[] = [
+                    'product_id' => $row['product_id'],
+                    'product_name' => $row['product_name'],
+                    'total_quantity' => intval($row['total_quantity']),
+                    'last_sale_date' => $row['last_sale_date']
+                ];
+            }
+
+            sendJsonResponse($salesData);
+        else {
             sendJsonResponse(["success" => false, "error" => "Missing required fields"], 400);
         }
     } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {

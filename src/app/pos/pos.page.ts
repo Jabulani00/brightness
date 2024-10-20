@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertController,ModalController  } from '@ionic/angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { AlertController, ModalController } from '@ionic/angular';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
-import { PromotionService } from '../services/promotion.service'; 
+import { PromotionService } from '../services/promotion.service';
+import { Camera } from '@capacitor/camera';
+import jsQR from 'jsqr';
+import { Capacitor } from '@capacitor/core';
+import { CameraService } from '../services/camera.service';
 
 interface Product {
   id: any;
@@ -20,12 +24,11 @@ interface Product {
   created_at: string;
   updated_at: string;
   quantity?: number;
-  discountedPrice?: number; // Add this property
-  hasPromotion?: boolean; // Add this property
-  promotionName?: string; // Add this property
+  discountedPrice?: number;
+  hasPromotion?: boolean;
+  promotionName?: string;
   canRemove?: boolean;
 }
-
 
 @Component({
   selector: 'app-pos',
@@ -35,33 +38,41 @@ interface Product {
 export class POSPage implements OnInit {
   currentDate = new Date();
   categories: Array<{ name: string, icon: string }> = [];
-  selectedCategory: string = 'All';
+  selectedCategory = 'All';
   allProducts: Product[] = [];
   products: Product[] = [];
   cart: Product[] = [];
-  barcodeInput: string = '';
-  paymentType: string = '';
-  isCheckoutComplete: boolean = false;
-  amountPaid: number = 0;
-  amountPaidInput: string = '';
-  receiptVisible: boolean = false;
+  barcodeInput = '';
+  paymentType = '';
+  isCheckoutComplete = false;
+  amountPaid = 0;
+  amountPaidInput = '';
+  receiptVisible = false;
   receiptData: any = null;
-  cartItems: any[] = [];
   userId: string | null = null;
   promotions: any[] = [];
-
- // Updated properties for password verification
- showPasswordModal: boolean = false;
-  passwordInput: string = '';
-  passwords: string[] = ['pass1', 'pass2', 'pass3', 'pass4', 'pass5'];
+  showPasswordModal = false;
+  passwordInput = '';
+  passwords = ['pass1', 'pass2', 'pass3', 'pass4', 'pass5'];
   enteredPasswords: string[] = [];
-  isRemoveEnabled: boolean = false;
-  constructor(private alertController: AlertController,
-              private http: HttpClient,
-              private router: Router,
-              private promotionService: PromotionService,
-              private modalController: ModalController,
-            ) {}
+  isRemoveEnabled = false;
+
+  @ViewChild('video', { static: false }) video!: ElementRef;
+  @ViewChild('canvas', { static: false }) canvas!: ElementRef;
+
+  canvasElement: any;
+  videoElement: any;
+  canvasContext: any;
+  scanActive = false;
+
+  constructor(
+    private alertController: AlertController,
+    private http: HttpClient,
+    private router: Router,
+    private promotionService: PromotionService,
+    private modalController: ModalController,
+    private cameraService: CameraService
+  ) {}
 
   ngOnInit() {
     this.loadProducts();
@@ -69,50 +80,145 @@ export class POSPage implements OnInit {
     this.loadPromotions();
   }
 
+  ngAfterViewInit() {
+    this.canvasElement = this.canvas?.nativeElement;
+    this.canvasContext = this.canvasElement?.getContext('2d');
+    this.videoElement = this.video?.nativeElement;
+  }
+
+  async startScan() {
+    try {
+      const stream = await this.cameraService.startCamera();
+      if (this.videoElement) {
+        this.videoElement.srcObject = stream;
+        this.videoElement.setAttribute('playsinline', true);
+        this.videoElement.play();
+        this.scanActive = true;
+        requestAnimationFrame(this.scan.bind(this));
+      }
+    } catch (error) {
+      console.error('Error starting camera:', error);
+      this.showAlert('Camera Error', 'Could not start the camera.');
+    }
+  }
+
+  async scan() {
+    if (this.videoElement.readyState === this.videoElement.HAVE_ENOUGH_DATA) {
+      this.canvasElement.height = this.videoElement.videoHeight;
+      this.canvasElement.width = this.videoElement.videoWidth;
+
+      this.canvasContext.drawImage(
+        this.videoElement,
+        0,
+        0,
+        this.canvasElement.width,
+        this.canvasElement.height
+      );
+
+      const imageData = this.canvasContext.getImageData(
+        0,
+        0,
+        this.canvasElement.width,
+        this.canvasElement.height
+      );
+
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert',
+      });
+
+      if (code) {
+        this.scanActive = false;
+        this.searchProducts({ target: { value: code.data } });
+        await this.cameraService.stopCamera();
+      } else if (this.scanActive) {
+        requestAnimationFrame(this.scan.bind(this));
+      }
+    } else if (this.scanActive) {
+      requestAnimationFrame(this.scan.bind(this));
+    }
+  }
+
+  stopScan() {
+    this.scanActive = false;
+    this.cameraService.stopCamera();
+  }
+
+  searchProducts(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+    this.filterProducts(searchTerm);
+  }
+
+  filterProducts(searchTerm = '') {
+    this.products = this.allProducts.filter(
+      (product) =>
+        (this.selectedCategory === 'All' || product.category === this.selectedCategory) &&
+        (product.name.toLowerCase().includes(searchTerm) ||
+          product.barcode.toLowerCase().includes(searchTerm))
+    );
+
+    const exactMatch = this.allProducts.find(
+      (product) => product.barcode.toLowerCase() === searchTerm
+    );
+    if (exactMatch) {
+      this.addToCart(exactMatch);
+    }
+  }
+
+  async checkCameraPermission(): Promise<boolean> {
+    if (Capacitor.getPlatform() === 'web') {
+      return true;
+    }
+    
+    const permissions = await Camera.checkPermissions();
+    if (permissions.camera === 'denied' || permissions.camera === 'prompt') {
+      const permissionRequest = await Camera.requestPermissions();
+      return permissionRequest.camera === 'granted';
+    }
+    return permissions.camera === 'granted';
+  }
+
   getUserId() {
     this.userId = sessionStorage.getItem('userId');
     if (!this.userId) {
       console.warn('User is not logged in');
-      // You might want to redirect to login page or show a message
     }
   }
 
   loadProducts() {
     this.http.get<Product[]>('http://localhost/user_api/products.php').subscribe({
       next: (data: Product[]) => {
-        this.allProducts = data.map(product => ({
+        this.allProducts = data.map((product) => ({
           ...product,
-          price: +product.price || 0
+          price: +product.price || 0,
         }));
         this.products = this.allProducts;
         this.extractCategories();
         this.applyPromotions();
-        console.log('Products loaded:', this.products);
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error) => {
         console.error('Error loading products:', error);
-      }
+      },
     });
   }
 
   loadPromotions() {
     this.promotionService.getPromotions().subscribe({
       next: (promotions) => {
-        this.promotions = promotions.map(promo => ({
+        this.promotions = promotions.map((promo) => ({
           ...promo,
-          discount_percentage: this.ensureValidNumber(promo.discount_percentage)
+          discount_percentage: this.ensureValidNumber(promo.discount_percentage),
         }));
         this.applyPromotions();
       },
       error: (error) => {
         console.error('Error loading promotions:', error);
-      }
+      },
     });
   }
 
   applyPromotions() {
-    this.allProducts.forEach(product => {
-      const promotion = this.promotions.find(p => p.product_id === product.product_id);
+    this.allProducts.forEach((product) => {
+      const promotion = this.promotions.find((p) => p.product_id === product.product_id);
       if (promotion) {
         const discountAmount = product.price * (promotion.discount_percentage / 100);
         product.discountedPrice = this.roundToTwo(product.price - discountAmount);
@@ -125,6 +231,8 @@ export class POSPage implements OnInit {
     });
     this.updateCartWithPromotions();
   }
+
+ 
 
   updateCartWithPromotions() {
     this.cart.forEach(item => {
@@ -286,21 +394,13 @@ resetCart() {
     }
   }
 
-  searchProducts(event: any) {
-    const searchTerm = event.target.value.toLowerCase();
-    this.filterProducts(searchTerm);
-  }
+ 
 
   onCategoryChange() {
     this.filterProducts();
 }
 
-  filterProducts(searchTerm: string = '') {
-    this.products = this.allProducts.filter(product =>
-      (this.selectedCategory === 'All' || product.category === this.selectedCategory) &&
-      (product.name.toLowerCase().includes(searchTerm) || product.barcode.includes(searchTerm))
-    );
-}
+  
 
 
 addToCart(product: Product) {

@@ -152,6 +152,77 @@
           </ion-label>
         </ion-item>
       </ion-list>
+
+      <ion-item *ngIf="currentOrderDetails && currentOrderDetails.order_type === 'walk-in'">
+        <ion-label>Payment Type</ion-label>
+        <ion-select [(ngModel)]="paymentType">
+          <ion-select-option value="cash">Cash</ion-select-option>
+          <ion-select-option value="card">Card</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="paymentType === 'cash'">
+        <ion-label position="floating">Amount Paid</ion-label>
+        <ion-input type="number" [(ngModel)]="amountPaidInput"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" (click)="checkout()" *ngIf="currentOrderDetails && currentOrderDetails.order_type === 'walk-in'">
+        Checkout
+      </ion-button>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Receipt Modal -->
+<ion-modal [isOpen]="isCheckoutComplete">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Receipt</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="isCheckoutComplete = false">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <h2>Order Receipt</h2>
+      <p>Date: {{ receiptData?.date }}</p>
+      <p>Cashier: {{ receiptData?.cashier }} (ID: {{ receiptData?.cashierId }})</p>
+      <ion-list>
+        <ion-item *ngFor="let item of receiptData?.items">
+          <ion-label>
+            <h3>{{ item.product_name }}</h3>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: R{{ item.price_per_unit }}</p>
+          </ion-label>
+          <ion-note slot="end">R{{ item.quantity * item.price_per_unit }}</ion-note>
+        </ion-item>
+      </ion-list>
+      <ion-item>
+        <ion-label>Subtotal</ion-label>
+        <ion-note slot="end">R{{ receiptData?.subtotal?.toFixed(2) || '0.00' }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Tax</ion-label>
+        <ion-note slot="end">R{{ receiptData?.tax?.toFixed(2) || '0.00' }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Total</ion-label>
+        <ion-note slot="end">R{{ receiptData?.total?.toFixed(2) || '0.00' }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Payment Type</ion-label>
+        <ion-note slot="end">{{ receiptData?.paymentType }}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-label>Amount Paid</ion-label>
+        <ion-note slot="end">R{{ receiptData?.amountPaid?.toFixed(2) || '0.00' }}</ion-note>
+      </ion-item>
+      <ion-item *ngIf="receiptData?.paymentType === 'cash'">
+        <ion-label>Change</ion-label>
+        <ion-note slot="end">R{{ receiptData?.change?.toFixed(2) || '0.00' }}</ion-note>
+      </ion-item>
+      <ion-button expand="block" (click)="printReceipt()">Print Receipt</ion-button>
     </ion-content>
   </ng-template>
 </ion-modal>
